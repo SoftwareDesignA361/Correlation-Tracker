@@ -59,7 +59,8 @@ main h2 {
 
 .btn-primary:hover {
     background-color: var(--secondary-color);
-    color: var(--text-color);
+    color: var(--background-color);
+    border-color: var(--header-color);
 }
 
 main .btn {
