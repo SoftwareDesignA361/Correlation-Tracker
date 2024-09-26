@@ -83,3 +83,12 @@ label {
 #forgot-password:hover {
     text-decoration: underline;
 }
+
+.login-container {
+    display: flex;
+    margin-top: 100px;
+}
+
+#submit {
+    margin-top: -25px;
+}
