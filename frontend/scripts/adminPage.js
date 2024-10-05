@@ -25,9 +25,19 @@ function showContent(url) {
     } else if (url === '/admin/correlation2') {
         document.getElementById('mainContent').style.display = 'none';
         document.getElementById('correlation2').style.display = 'block';
-    } else {
+    //BACK END EDIT
+    } else if (url === '/admin/question-pool') {
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('question-pool').style.display = 'block';
+    } else if (url === '/admin/exam-builder') {
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('exam-builder').style.display = 'block';
+    }
+    else {
         document.getElementById('correlation1').style.display = 'none';
         document.getElementById('correlation2').style.display = 'none';
+        document.getElementById('question-pool').style.display = 'none';
+        document.getElementById('exam-builder').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
     }
 }
@@ -40,6 +50,16 @@ document.getElementById('correlation1Btn').addEventListener('click', function() 
 document.getElementById('correlation2Btn').addEventListener('click', function() {
     window.history.pushState({}, '', '/admin/correlation2');
     showContent('/admin/correlation2');
+});
+
+//BACK END EDIT
+document.getElementById('question-poolBtn').addEventListener('click', function() {
+    window.history.pushState({}, '', '/admin/question-pool');
+    showContent('/admin/question-pool');
+});
+document.getElementById('exam-builderBtn').addEventListener('click', function() {
+    window.history.pushState({}, '', '/admin/exam-builder');
+    showContent('/admin/exam-builder');
 });
 
 document.getElementById('backBtn1').addEventListener('click', function() {
