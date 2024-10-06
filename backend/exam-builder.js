@@ -1,9 +1,11 @@
 //SUPABASE CONNECTION
-//require('dotenv').config();
-import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import dotenv from '../node_modules/dotenv/lib/main.js';
+dotenv.config();
 
-const supabaseUrl = 'https://viltkhvmctitduchemrz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpbHRraHZtY3RpdGR1Y2hlbXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMTY2MTAsImV4cCI6MjA0Mjg5MjYxMH0.OL9hdmq_wp6MtLDZ77SPY9wa26sZ6OQDMcwKE0ZUs8Y';
+import {createClient} from '/@supabase/supabase-js';
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
