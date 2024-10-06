@@ -29,6 +29,9 @@
         <div class="mt-4">
             <button class="btn btn-primary btn-lg mx-2" id="correlation1Btn">Manage Correlation 1</button>
             <button class="btn btn-primary btn-lg mx-2" id="correlation2Btn">Manage Correlation 2</button>
+            <!-- BACKEND EDIT -->
+            <button class="btn btn-primary btn-lg mx-2" id="question-poolBtn">Question Pool</button>
+            <button class="btn btn-primary btn-lg mx-2" id="exam-builderBtn">Exam Builder</button>
         </div>
     </main>
     
@@ -46,6 +49,42 @@
         <button class="btn btn-secondary btn-lg mt-4" id="backBtn2">Back</button>
     </div>
 
+    <!-- Question Bank -->
+    <div class="container text-center" id="question-pool">
+        <form id="questionForm">
+            <select id="program" required>
+                <option value="" disabled selected>--Select a Program--</option>
+            </select>
+            
+            <select id="course" required>
+                <option value="" disabled selected>--Select a Course Code--</option>
+            </select>
+            
+            <select id="school_year" required>
+                <option value="" disabled selected>School Year</option>
+            </select>
+            <input type="text" placeholder="Question" id="question" required>
+            <input type="text" placeholder="Choice: 1" id="choice_1" required>
+            <input type="text" placeholder="Choice: 2" id="choice_2" required>
+            <input type="text" placeholder="Choice: 3" id="choice_3" required>
+            <input type="text" placeholder="Choice: 4" id="choice_4">
+            <input type="submit" id="submit">
+        </form>
+    </div>
+
+    <!-- Questionnaire Generator -->
+    <div class="container text-center" id="exam-builder">
+        <select id="select-program" required>
+            <option value="" disabled selected>--Select a Program--</option>
+        </select>
+        <table id="course-table">
+            <caption>Examination Generator</caption>
+            <tr><th>Course Name</th><th>Number of Items</th></tr>
+        </table>
+        <input type="number" placeholder="Number of Sets" id="sets" required>
+        <input type="submit" id="generate" value="Generate">
+    </div>
+
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -53,5 +92,7 @@
 
     <!-- Admin Page JS -->
      <script src="/scripts/adminPage.js"></script>
+    <!-- BACK END EDIT -->
+     <script src="/scripts/questionBank.js"></script>
 </body>
 </html>

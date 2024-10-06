@@ -69,7 +69,8 @@ main .btn {
     margin-right: 10px;
 }
 
-#correlation1, #correlation2 {
+/*BACK END EDIT*/
+#correlation1, #correlation2, #question-pool, #exam-builder {
     display: none;
 }
 

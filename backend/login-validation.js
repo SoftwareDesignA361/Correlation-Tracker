@@ -1,12 +1,14 @@
-require('dotenv').config();
-const { createClient } = require('@supabase/supabase-js');
+import dotenv from 'dotenv';
+dotenv.config();
+
+import {createClient} from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-async function validateLogin(username, password, callback) {
+export default async function validateLogin(username, password, callback) {
     try {
         const { data, error } = await supabase
             .from('accounts')
@@ -30,5 +32,3 @@ async function validateLogin(username, password, callback) {
         callback(err, null);
     }
 }
-
-module.exports = validateLogin;
