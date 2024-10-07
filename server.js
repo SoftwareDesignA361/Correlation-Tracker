@@ -3,17 +3,30 @@ import express from 'express';
 import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
-
 //login-validation [BACKEND]
 import validateLogin from './backend/login-validation.js';
-
 //question-bank [BACKEND]
 import { fetchPrograms, fetchCourses, fetchYears, insertQuizData } from './backend/question-bank.js';
+//exam-builder [BACKEND]
+import { getCourseQuestions } from './backend/exam-builder.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+//MIDDLEWARE
+app.use(express.json());
+
+//QUESTION POOL FETCH
+app.get('/api/programs', fetchPrograms);
+app.get('/api/courses', fetchCourses);
+app.get('/api/years', fetchYears);
+app.post('/api/quiz', insertQuizData);
+
+//EXAM BUILDER FETCH
+app.post('/api/generate', getCourseQuestions);
 
 app.use(session({
     secret: 'CPE107L-1.A361',
@@ -21,7 +34,7 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'frontend')));
 app.use('/backend', express.static(path.join(__dirname, 'backend')));
@@ -34,7 +47,7 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-// Routes for authentication
+// AUTHENTICATION ROUTES
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     validateLogin(username, password, (err, row) => {
@@ -48,7 +61,6 @@ app.post('/login', (req, res) => {
                 username: row.Username,
                 role: row.Role,
             };
-
             if (row.Role === 'Admin') {
                 res.redirect('/admin');
             } else if (row.Role === 'Student') {
@@ -91,12 +103,6 @@ app.post('/logout', (req, res) => {
         res.status(200).send('Logout successful');
     });
 });
-
-// Supabase routes from the backend module
-app.get('/api/programs', fetchPrograms);
-app.get('/api/courses', fetchCourses);
-app.get('/api/years', fetchYears);
-app.post('/api/quiz', insertQuizData);
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');

@@ -1,3 +1,4 @@
+//VARIABLES AND CONSTANTS
 const programSelect = document.getElementById('program');
 const courseSelect = document.getElementById('course');
 const yearSelect = document.getElementById('school_year');

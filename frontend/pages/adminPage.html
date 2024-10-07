@@ -70,19 +70,21 @@
             <input type="text" placeholder="Choice: 4" id="choice_4">
             <input type="submit" id="submit">
         </form>
+        <button class="btn btn-secondary btn-lg mt-4" id="backBtn3">Back</button>
     </div>
 
     <!-- Questionnaire Generator -->
     <div class="container text-center" id="exam-builder">
+        <h3>Examination Generator</h3>
         <select id="select-program" required>
             <option value="" disabled selected>--Select a Program--</option>
         </select>
         <table id="course-table">
-            <caption>Examination Generator</caption>
             <tr><th>Course Name</th><th>Number of Items</th></tr>
         </table>
         <input type="number" placeholder="Number of Sets" id="sets" required>
         <input type="submit" id="generate" value="Generate">
+        <button class="btn btn-secondary btn-lg mt-4" id="backBtn4">Back</button>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
@@ -94,5 +96,6 @@
      <script src="/scripts/adminPage.js"></script>
     <!-- BACK END EDIT -->
      <script src="/scripts/questionBank.js"></script>
+     <script src="/scripts/examBuilder.js"></script>
 </body>
 </html>
