@@ -67,8 +67,48 @@ main .btn {
     margin-top: 20px;
     margin-right: 10px;
 }
+/*Design for Question Bank*/
+#questionForm {
+    background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
 
-#correlation1, #correlation2 {
+#questionForm select,
+#questionForm input[type="text"],
+#questionForm input[type="submit"] {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-family: 'Arial', sans-serif;
+}
+
+#questionForm select:focus,
+#questionForm input[type="text"]:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+}
+
+#questionForm input[type="submit"] {
+    color: var(--header-text-color);
+    background-color: var(--secondary-color);
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+}
+
+#questionForm input[type="submit"]:hover {
+    background-color: var(--trd-color);
+}
+
+
+/*BACK END EDIT*/
+#correlation1, #correlation2, #question-pool, #exam-builder {
     display: none;
 }
 

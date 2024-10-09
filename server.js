@@ -1,9 +1,17 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const validateLogin = require('./backend/login-validation');
-const session = require('express-session');
-require('dotenv').config();
+//IMPORT FOR SERVER
+import express from 'express';
+import path from 'path';
+import session from 'express-session';
+import { fileURLToPath } from 'url';
+
+//login-validation [BACKEND]
+import validateLogin from './backend/login-validation.js';
+
+//question-bank [BACKEND]
+import { fetchPrograms, fetchCourses, fetchYears, insertQuizData } from './backend/question-bank.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -16,7 +24,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'frontend')));
-
+app.use('/backend', express.static(path.join(__dirname, 'backend')));
 
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
@@ -26,15 +34,15 @@ function isAuthenticated(req, res, next) {
     }
 }
 
+// Routes for authentication
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-    
     validateLogin(username, password, (err, row) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Internal Server Error');
         }
-        
+
         if (row) {
             req.session.user = {
                 username: row.Username,
@@ -83,6 +91,12 @@ app.post('/logout', (req, res) => {
         res.status(200).send('Logout successful');
     });
 });
+
+// Supabase routes from the backend module
+app.get('/api/programs', fetchPrograms);
+app.get('/api/courses', fetchCourses);
+app.get('/api/years', fetchYears);
+app.post('/api/quiz', insertQuizData);
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
