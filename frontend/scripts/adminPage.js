@@ -90,6 +90,16 @@ document.getElementById('backBtn2').addEventListener('click', function() {
     }
 });
 
+document.getElementById('backBtn3').addEventListener('click', ()=>{
+    window.history.pushState({},'', '/admin');
+    showContent('/admin')
+});
+
+document.getElementById('backBtn4').addEventListener('click', ()=>{
+    window.history.pushState({},'', '/admin');
+    showContent('/admin')
+});
+
 window.addEventListener('popstate', function(event) {
     showContent(window.location.pathname);
 });
