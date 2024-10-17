@@ -1,5 +1,6 @@
 //IMPORT FOR SERVER
 import express from 'express';
+import 'dotenv/config';
 import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
@@ -9,6 +10,12 @@ import validateLogin from './backend/login-validation.js';
 import { fetchPrograms, fetchCourses, fetchYears, insertQuizData } from './backend/question-bank.js';
 //exam-builder [BACKEND]
 import { getCourseQuestions } from './backend/exam-builder.js';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 const __filename = fileURLToPath(import.meta.url);

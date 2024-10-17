@@ -8,6 +8,42 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+/*//Variable and constant
+let courseQuestionMap = {}; // This will act as the hashmap
+
+//function to fetch course questions from database
+export const getCourseQuestions = async (req, res) => {
+    const { courses } = req.body;
+
+    try {
+
+        //fetch question from Supabase
+        const{ data, error } = await supabase
+            .from('course_question') //pulihi sa actual name sa table sa db
+            .select('course, numItems, numSet')
+            .in('course', courses); //fetch data from specific courses
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        //populate the hashmap with fetched data
+        data.forEach((row) => {
+            courseQuestionMap[row.courses] = {
+                numItems: row.numItems,
+                numSet: row.numSet,
+
+            };
+        });
+        //return success (if tama) and the hashmap data
+        res.json({success: true, courseQuestionMap});
+
+        console.log(courseQuestionMap);
+    } catch (err) {
+        console.error('Error fetching course question:', err.message);
+        res.status(500).json({success: false, error: err.message});
+    }
+};*/
 //VARIABLES AND CONSTANTS
 let numItems, examList, numSet;
 
