@@ -1,0 +1,85 @@
+:root {
+    --background-color: #272727;
+    --text-color: #ffffff;
+    --shade-color: #808080;
+    --secondary-color: #bb98ff;
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+.login-container {
+    margin-top: 2rem;
+}
+
+img {
+    height: 2rem;
+}
+
+.text-center {
+    color: var(--text-color);
+}
+
+.login-form {
+    padding: 2rem 4rem 0 4rem;
+}
+
+.form-group {
+    position: relative;
+    padding-bottom: 2rem;
+}
+
+label {
+    font-size: 1.4em;
+    padding-left: 0.5em;
+    position: absolute;
+    transform: translateY(-125%);
+    color: var(--text-color);
+    z-index: -1000;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.form-control:focus + label,
+.form-control:not(:placeholder-shown) + label {
+    transform: translateY(-230%);
+    color: var(--secondary-color);
+    z-index: 1;
+}
+
+.form-control {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--text-color);
+    border-radius: 0;
+    font-size: 1.2em;
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom: 2px solid var(--secondary-color);
+    color: var(--text-color);
+}
+
+.btn {
+    transition: background-color 0.7s ease, border-color 0.7s ease; 
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    padding: 1em;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+}
+
+#forgot-password {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+#forgot-password:hover {
+    text-decoration: underline;
+}

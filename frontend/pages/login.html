@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- login CSS -->
+    <link href="/designs/login.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container login-container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <img src="/img/MMCM.png" alt="MMCM" class="img-fluid mb-4">
+            <h3 class="text-center">Login</h3>
+            <form class="login-form" action="/login" method="POST">
+                <div class="form-group">
+                    <input type="text" name="username" class="form-control" id="username" placeholder=" " required>
+                    <label for="text">Username</label>
+                    <div class="invalid-feedback" id="username-error">Please enter a valid username.</div>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" id="password" placeholder=" " required>
+                    <label for="password">Password</label>
+                    <div class="invalid-feedback" id="password-error">Please enter your password.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="submit">Login</button>
+                
+                <a href="#" onclick="openPopup()" class="d-block text-right mt-2" id="forgot-password">Forgot Password?</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- login JS -->
+<script src="/scripts/login.js"></script>
+<script src="/scripts/server.js"></script>
+
+</body>
+</html>
