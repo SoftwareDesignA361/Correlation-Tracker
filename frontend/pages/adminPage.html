@@ -27,26 +27,36 @@
         <main class="container text-center" id="mainContent">
             <h2 class="mt-5">Hello, program chair.</h2>
             <div class="mt-4">
-                <button class="btn btn-primary btn-lg mx-2" id="correlation1Btn">Manage Correlation 1</button>
-                <button class="btn btn-primary btn-lg mx-2" id="correlation2Btn">Manage Correlation 2</button>
-                <!-- BACKEND EDIT -->
+                <button class="btn btn-primary btn-lg mx-2" id="analyzeDataBtn">Analyze Data</button>
                 <button class="btn btn-primary btn-lg mx-2" id="question-poolBtn">Question Bank</button>
                 <button class="btn btn-primary btn-lg mx-2" id="exam-builderBtn">Test Generator</button>
             </div>
         </main>
-        
-        <div class="container text-center" id="correlation1">
-            <h2 class="mt-5">Correlation 1 Details</h2>
-            <p>Enter Student ID:</p>
-            <input type="text" id="studentId1" class="form-control" placeholder="Student ID">
-            <button class="btn btn-secondary btn-lg mt-4" id="backBtn1">Back</button>
-        </div>
 
-        <div class="container text-center" id="correlation2">
-            <h2 class="mt-5">Correlation 2 Details</h2>
-            <p>Enter Student ID:</p>
-            <input type="text" id="studentId2" class="form-control" placeholder="Student ID">
-            <button class="btn btn-secondary btn-lg mt-4" id="backBtn2">Back</button>
+
+        <!-- Hidden Form for Analyze Data -->
+        <div class="container text-center" id="analyzeData" style="display:none;">
+            <h2 class="mt-5">Manage Correlation</h2>
+            <form>
+                <div class="form-group">
+                    <label for="schoolYear">School Year:</label>
+                    <select id="schoolYear" class="form-control">
+                        <option value="2024-2025" selected>2024 - 2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="csvFile">Upload CSV File:</label>
+                    <input type="file" id="csvFile" class="form-control-file">
+                </div>
+                <div class="button-container"> <!-- Container for the buttons -->
+                    <button type="submit" class="btn btn-primary">Submit Analysis</button>
+                    <button type="button" class="btn btn-secondary btn-lg backBtn">Back</button>
+                </div>
+            </form>
+        </div>
+        <div class="container text-center" id="analysisResults" style="display:none;">
+            <h2 class="mt-5">Analysis Results</h2>
+            <!-- Placeholder or dynamic content -->
         </div>
 
         <!-- Question Bank -->
@@ -70,7 +80,7 @@
                 <input type="text" placeholder="Choice: 4" id="choice_4">
                 <input type="submit" id="submit">
             </form>
-            <button class="btn btn-secondary btn-lg mt-4" id="backBtn3">Back</button>
+            <button class="btn btn-secondary btn-lg mt-4 backBtn">Back</button>
         </div>
 
         <!-- Questionnaire Generator -->
@@ -91,7 +101,7 @@
             <input type="number" class="form-control" placeholder="Number of Sets" id="sets" required>
             <div class="button-container">
                 <button type="submit" class="btn btn-primary" id="generate">Generate</button>
-                <button class="btn btn-secondary" id="backBtn4">Back</button>
+                <button class="btn btn-secondary backBtn">Back</button>
                 <button class="btn btn-secondary" id="get-pdf">Print PDF</button>
             </div>            
         </div>

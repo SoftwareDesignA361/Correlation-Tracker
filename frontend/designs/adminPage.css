@@ -116,6 +116,9 @@ main .btn {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 30px;
 }
+#analyze-data {
+    display: none;
+}
 
 #questionForm select,
 #questionForm input[type="text"],
@@ -280,6 +283,78 @@ main .btn {
 #exam-builder thead tr:hover {
     background-color:  #272727;
     color: white;/* Keep header hover consistent with non-hover state */
+}
+/* Container for the Manage Correlation Form */
+#analyzeData {
+    background-color: #fff; /* White background for the form area */
+    border: 1px solid #ccc; /* Light gray border for subtle definition */
+    border-radius: 8px; /* Rounded corners for a modern look */
+    padding: 20px; /* Adequate padding around the content */
+    margin-top: 20px; /* Space from the top */
+    width: auto; /* Adjust width as needed or keep auto */
+}
+
+/* Header within the form */
+#analyzeData h2 {
+    color: #333; /* Dark grey for the header */
+    margin-bottom: 20px; /* Space below the header */
+}
+
+/* Styling for form elements */
+#analyzeData .form-group {
+    margin-bottom: 15px; /* Space between form elements */
+}
+
+#analyzeData label {
+    font-weight: bold; /* Bold font for labels */
+    color: #666; /* Medium grey for text */
+    margin-bottom: 5px; /* Space below the label */
+}
+
+#analyzeData select, #analyzeData input[type="file"] {
+    width: 100%; /* Full width of the parent container */
+    padding: 8px; /* Padding inside elements for better text entry */
+    border: 1px solid #ccc; /* Subtle border */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #f8f8f8; /* Light grey background */
+}
+
+/* Button container to align buttons next to each other */
+.button-container {
+    display: flex;
+    justify-content: space-between; /* Space out buttons */
+    gap: 10px; /* Gap between buttons */
+}
+
+/* Style adjustments for buttons */
+#analyzeData .btn {
+    border: none; /* No border for a cleaner look */
+    padding: 10px 20px; /* Padding for better touch interaction */
+    font-size: 16px; /* Readable font size */
+    border-radius: 4px; /* Consistent rounded corners */
+    width: 49%; /* Each button takes up half the container width minus the gap */
+    cursor: pointer; /* Pointer to indicate clickable area */
+    transition: background-color 0.2s; /* Smooth transition for hover effects */
+}
+
+/* Primary action button */
+#analyzeData .btn-primary {
+    background-color: #B22222; /* Red background */
+    color: white; /* White text for contrast */
+}
+
+#analyzeData .btn-primary:hover {
+    background-color: #DA3E3E; /* Lighter red on hover */
+}
+
+/* Secondary action button */
+#analyzeData .btn-secondary {
+    background-color: #272727; /* Dark grey background */
+    color: white; /* White text for contrast */
+}
+
+#analyzeData .btn-secondary:hover {
+    background-color: #333333; /* Slightly darker grey on hover */
 }
 
 
