@@ -16,23 +16,6 @@ const generateQuestions = (dataQuestion, program, idValue, set) => {
       <p>Total Points: 100</p>
     </div>
   
-    <div class="student-info">
-      <div class="info-field">
-        <span class="info-label">Name: </span>
-        ______________________________
-      </div>
-      <div class="info-field">
-        <span class="info-label">Student ID: </span>
-        ______________________________
-      </div>
-      <div class="info-field">
-        <span class="info-label">Date: </span>
-        ______________________________
-      </div>
-      <div class="info-field">
-        <span class="info-label">Class: </span>
-        ______________________________
-      </div>
     </div>
   
     <div class="instructions">
@@ -42,6 +25,7 @@ const generateQuestions = (dataQuestion, program, idValue, set) => {
         <li>Fill in the circle completely with a blue or black pen.</li>
         <li>Choose only one answer for each question.</li>
         <li>Erasures or corrections will not be accepted.</li>
+        <li>Cheating is strictly probihited</li>
         <li>Each question is worth 1 point.</li>
       </ol>
     </div>
@@ -65,11 +49,11 @@ const generateQuestions = (dataQuestion, program, idValue, set) => {
     const optionsDiv = document.createElement('div');
     optionsDiv.classList.add('options');
 
-    // Loop through shuffled choices and create option elements
-    shuffledChoices.forEach(choice => {
+    const labels = ['A', 'B', 'C', 'D']; // Labels for the choices
+    shuffledChoices.forEach((choice, index) => {
       const optionDiv = document.createElement('div');
       optionDiv.classList.add('option');
-      optionDiv.innerHTML = `<span class="circle"></span> ${choice}`;
+      optionDiv.innerHTML = `<span class="label">${labels[index]}.</span> ${choice}`;
       optionsDiv.appendChild(optionDiv);
     });
 

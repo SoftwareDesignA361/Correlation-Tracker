@@ -1,104 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page - Correlation Course Tracker</title>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Page - Correlation Course Tracker</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- adminPage CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="/designs/adminPage.css" rel="stylesheet">
+        <!-- adminPage CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="/designs/adminPage.css" rel="stylesheet">
 
-</head>
-<body>
-    <header class="d-flex justify-content-between align-items-center p-3">
-        <div class="d-flex align-items-center">
-            <img src="/img/MMCM_Logo.png" alt="MMCM Logo" class="logo">
-            <h1 class="ml-2">Correlation Course Tracker</h1>
+    </head>
+    <body>
+        <header class="d-flex justify-content-between align-items-center p-3">
+            <div class="d-flex align-items-center">
+                <img src="/img/MMCM_Logo.png" alt="MMCM Logo" class="logo">
+                <h1 class="ml-2">Correlation Course Tracker</h1>
+            </div>
+            <a href="/logout" class="logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
+        </header>
+
+        <main class="container text-center" id="mainContent">
+            <h2 class="mt-5">Hello, program chair.</h2>
+            <div class="mt-4">
+                <button class="btn btn-primary btn-lg mx-2" id="correlation1Btn">Manage Correlation 1</button>
+                <button class="btn btn-primary btn-lg mx-2" id="correlation2Btn">Manage Correlation 2</button>
+                <!-- BACKEND EDIT -->
+                <button class="btn btn-primary btn-lg mx-2" id="question-poolBtn">Question Bank</button>
+                <button class="btn btn-primary btn-lg mx-2" id="exam-builderBtn">Test Generator</button>
+            </div>
+        </main>
+        
+        <div class="container text-center" id="correlation1">
+            <h2 class="mt-5">Correlation 1 Details</h2>
+            <p>Enter Student ID:</p>
+            <input type="text" id="studentId1" class="form-control" placeholder="Student ID">
+            <button class="btn btn-secondary btn-lg mt-4" id="backBtn1">Back</button>
         </div>
-        <a href="/logout" class="logout">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        </a>
-    </header>
 
-    <main class="container text-center" id="mainContent">
-        <h2 class="mt-5">Hello, program chair.</h2>
-        <div class="mt-4">
-            <button class="btn btn-primary btn-lg mx-2" id="correlation1Btn">Manage Correlation 1</button>
-            <button class="btn btn-primary btn-lg mx-2" id="correlation2Btn">Manage Correlation 2</button>
-            <!-- BACKEND EDIT -->
-            <button class="btn btn-primary btn-lg mx-2" id="question-poolBtn">Question Bank</button>
-            <button class="btn btn-primary btn-lg mx-2" id="exam-builderBtn">Test Generator</button>
+        <div class="container text-center" id="correlation2">
+            <h2 class="mt-5">Correlation 2 Details</h2>
+            <p>Enter Student ID:</p>
+            <input type="text" id="studentId2" class="form-control" placeholder="Student ID">
+            <button class="btn btn-secondary btn-lg mt-4" id="backBtn2">Back</button>
         </div>
-    </main>
-    
-    <div class="container text-center" id="correlation1">
-        <h2 class="mt-5">Correlation 1 Details</h2>
-        <p>Enter Student ID:</p>
-        <input type="text" id="studentId1" class="form-control" placeholder="Student ID">
-        <button class="btn btn-secondary btn-lg mt-4" id="backBtn1">Back</button>
-    </div>
 
-    <div class="container text-center" id="correlation2">
-        <h2 class="mt-5">Correlation 2 Details</h2>
-        <p>Enter Student ID:</p>
-        <input type="text" id="studentId2" class="form-control" placeholder="Student ID">
-        <button class="btn btn-secondary btn-lg mt-4" id="backBtn2">Back</button>
-    </div>
+        <!-- Question Bank -->
+        <div class="container text-center" id="question-pool">
+            <form id="questionForm">
+                <select id="program" required>
+                    <option value="" disabled selected>--Select a Program--</option>
+                </select>
+                
+                <select id="course" required>
+                    <option value="" disabled selected>--Select a Course Code--</option>
+                </select>
+                
+                <select id="school_year" required>
+                    <option value="" disabled selected>School Year</option>
+                </select>
+                <input type="text" placeholder="Question" id="question" required>
+                <input type="text" placeholder="Choice: 1" id="choice_1" required>
+                <input type="text" placeholder="Choice: 2" id="choice_2" required>
+                <input type="text" placeholder="Choice: 3" id="choice_3" required>
+                <input type="text" placeholder="Choice: 4" id="choice_4">
+                <input type="submit" id="submit">
+            </form>
+            <button class="btn btn-secondary btn-lg mt-4" id="backBtn3">Back</button>
+        </div>
 
-    <!-- Question Bank -->
-    <div class="container text-center" id="question-pool">
-        <form id="questionForm">
-            <select id="program" required>
-                <option value="" disabled selected>--Select a Program--</option>
-            </select>
-            
-            <select id="course" required>
-                <option value="" disabled selected>--Select a Course Code--</option>
-            </select>
-            
-            <select id="school_year" required>
-                <option value="" disabled selected>School Year</option>
-            </select>
-            <input type="text" placeholder="Question" id="question" required>
-            <input type="text" placeholder="Choice: 1" id="choice_1" required>
-            <input type="text" placeholder="Choice: 2" id="choice_2" required>
-            <input type="text" placeholder="Choice: 3" id="choice_3" required>
-            <input type="text" placeholder="Choice: 4" id="choice_4">
-            <input type="submit" id="submit">
-        </form>
-        <button class="btn btn-secondary btn-lg mt-4" id="backBtn3">Back</button>
-    </div>
+        <!-- Questionnaire Generator -->
+        <div class="container text-center" id="exam-builder">
+            <h2 class="generator-title">Examination Generator</h2>
+            <div class="form-group">
+                <select class="form-control custom-select" id="select-program" required>
+                    <option value="" disabled selected>--Select a Program--</option>
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table class="table" id="course-table">
+                    <thead>
+                        <tr><th>Course Name</th><th>Number of Items</th></tr>
+                    </thead>
+                </table>
+            </div>
+            <input type="number" class="form-control" placeholder="Number of Sets" id="sets" required>
+            <div class="button-container">
+                <button type="submit" class="btn btn-primary" id="generate">Generate</button>
+                <button class="btn btn-secondary" id="backBtn4">Back</button>
+                <button class="btn btn-secondary" id="get-pdf">Print PDF</button>
+            </div>            
+        </div>
 
-    <!-- Questionnaire Generator -->
-    <div class="container text-center" id="exam-builder">
-        <h3>Examination Generator</h3>
-        <select id="select-program" required>
-            <option value="" disabled selected>--Select a Program--</option>
-        </select>
-        <table id="course-table">
-            <tr><th>Course Name</th><th>Number of Items</th></tr>
-        </table>
-        <input type="number" placeholder="Number of Sets" id="sets" required>
-        <input type="submit" id="generate" value="Generate">
-        <button class="btn btn-secondary btn-lg mt-4" id="backBtn4">Back</button>
 
-        <button class="btn btn-secondary btn-lg mt-4" id="get-pdf">Print PDF</button>
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Admin Page JS -->
-     <script src="/scripts/adminPage.js"></script>
-    <!-- BACK END EDIT -->
-     <script src="/scripts/questionBank.js"></script>
-     <script type = "module" src="/scripts/examBuilder.js"></script>
-</body>
-</html>
+        <!-- Admin Page JS -->
+        <script src="/scripts/adminPage.js"></script>
+        <!-- BACK END EDIT -->
+        <script src="/scripts/questionBank.js"></script>
+        <script type = "module" src="/scripts/examBuilder.js"></script>
+    </body>
+    </html>
