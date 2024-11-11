@@ -93,7 +93,8 @@ document.getElementById('generate').addEventListener('click', async (e)=>{
         courses: courseList,
         items: courseItems,
         sets: setNumber.value,
-        program: programBuilder.value
+        program: programBuilder.value,
+        examId: Date.now()
     };
     const res = await fetch('/api/generate', {
         method: 'POST',
@@ -105,11 +106,17 @@ document.getElementById('generate').addEventListener('click', async (e)=>{
     const result = await res.json();
     if (result.success) {
         alert(`Questionnaire has been generated. Please copy this code to access the questionnaire: ${result.generateID}`);
+        localStorage.setItem('currentExamId', data.examId);
     } else {
         console.error("Error inserting data:", result.error);
     }
 });
 
 document.getElementById('get-pdf').addEventListener('click', async () => {
-    window.location.href = '/paper'
+    const examId = localStorage.getItem('currentExamId');
+    if (!examId) {
+        alert('Please generate an exam first');
+        return;
+    }
+    window.location.href = `/paper?examId=${examId}`;
 });
