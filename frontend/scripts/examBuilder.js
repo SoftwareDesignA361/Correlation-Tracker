@@ -157,9 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyButton = document.getElementById('copyCodeButton');
     if (copyButton) {
         copyButton.addEventListener('click', copyCode);
-    }
 });
 
 document.getElementById('get-pdf').addEventListener('click', async () => {
-    window.location.href = '/paper'
+    const examId = localStorage.getItem('currentExamId');
+    if (!examId) {
+        alert('Please generate an exam first');
+        return;
+    }
+    window.location.href = `/paper?examId=${examId}`;
 });

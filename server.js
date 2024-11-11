@@ -5,6 +5,7 @@ import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
 
 //login-validation [BACKEND]
 import validateLogin from './backend/login-validation.js';
@@ -15,6 +16,9 @@ import { fetchPrograms, fetchCourses, fetchYears, insertQuizData } from './backe
 //exam-builder [BACKEND]
 import { getCourseQuestions, getQuestionnaire } from './backend/exam-builder.js';
 import { createClient } from '@supabase/supabase-js';
+
+//analyze-data [BACKEND]
+import { analyzeData, getPrograms } from './backend/analyze-data.js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
@@ -27,9 +31,14 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-//MIDDLEWARE
 app.use(express.json());
 app.use(cors())
+app.use(fileUpload({
+    createParentPath: true,
+    limits: { 
+        fileSize: 2 * 1024 * 1024
+    },
+}));
 
 //QUESTION POOL FETCH
 app.get('/api/programs', fetchPrograms);
@@ -129,6 +138,8 @@ app.get('/analyze-data', isAuthenticated, (req, res) => {
     }
 });
 
+app.post('/api/analyze-data', analyzeData);
+app.get('/api/analyze-programs', getPrograms);
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
