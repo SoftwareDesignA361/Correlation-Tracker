@@ -1,35 +1,57 @@
 @page {
-    size: A4;
-    margin: 2cm;
+    size: 8.5in 17in;
+    margin: 0.5in;
 }
 
 body {
     font-family: 'Times New Roman', Times, serif;
-    max-width: 21cm;
+    width: 7.5in;
+    min-height: 20in;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0;
     background-color: white;
-    line-height: 1.5;
+    line-height: 1;
+    font-size: 10pt;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.content-wrapper {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    min-height: 20in;
+    padding: 0.5in 0;
+    box-sizing: border-box;
 }
 
 .header {
     text-align: center;
-    border-bottom: 2px solid #000;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    font-size: 11pt;
 }
 
 .student-info {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: 8px;
+    margin-bottom: 10px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    font-size: 10pt;
 }
 
 .info-field {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     border-bottom: 1px solid #000;
-    padding-bottom: 5px;
+    padding-bottom: 1px;
 }
 
 .info-label {
@@ -37,37 +59,97 @@ body {
 }
 
 .question {
-    margin-bottom: 30px;
+    margin-bottom: 3px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 0;
+    font-size: 10pt;
 }
 
 .instructions {
-    margin: 20px 0;
-    padding: 10px;
+    margin: 8px 0;
+    padding: 4px;
     border: 1px solid #000;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    font-size: 10pt;
 }
 
 .options {
-    margin-left: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 15px;
+    margin-left: 12px;
+    margin-top: 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
 .option {
-    margin: 8px 0;
+    margin: 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    font-size: 10pt;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    line-height: 1.1;
 }
 
 .circle {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #000;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 4px;
     vertical-align: middle;
+    flex-shrink: 0;
 }
+
+@media print {
+    @page {
+        size: 8.5in 17in;
+        margin: 0.5in;
+    }
+
+    body {
+        width: 7.5in;
+        min-height: 20in;
+        padding: 0;
+        margin: 0 auto;
+    }
+
+    .content-wrapper {
+        min-height: 20in;
+        padding: 0.5in 0;
+    }
+
+    #input-container {
+        display: none;
+    }
+
+    .page-break {
+        page-break-before: always;
+        break-before: page;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}
+
 #input-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    gap: 10px;
+    z-index: 1000;
 }
 
 #get-data {
@@ -76,7 +158,6 @@ body {
     border-radius: 4px;
     border: 1px solid #ccc;
     font-size: 16px;
-    margin-right: 10px;
 }
 
 #download-button {
@@ -94,13 +175,26 @@ body {
     background-color: #DA3E3E;
 }
 
+.question-section {
+    width: 100%;
+    margin: 0 auto;
+}
 
-@media print {
-    body {
-    padding: 0;
-    }
+.section {
+    margin-bottom: 0.5cm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
 
-    .page-break {
-    page-break-before: always;
-    }
+.question-number {
+    font-weight: bold;
+    margin-right: 4px;
+    font-size: 10pt;
+    display: inline-block;
+}
+
+.question-text {
+    font-size: 10pt;
+    margin-bottom: 1px;
+    display: inline;
 }

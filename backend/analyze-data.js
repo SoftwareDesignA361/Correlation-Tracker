@@ -14,15 +14,62 @@ export const analyzeData = async (req, res) => {
 
         const csvFile = req.files.csvFile;
         const program = req.body.program;
+        const term = parseInt(req.body.term);
+        const day = parseInt(req.body.day);
+        const schoolYear = req.body.schoolYear;
+        const attempt = req.body.attempt ? parseInt(req.body.attempt) : null;
 
-        if (!program) {
-            return res.status(400).json({ error: 'Program is required' });
+        if (!program || !term || !day || !schoolYear) {
+            return res.status(400).json({ 
+                error: 'All fields (Program, Term, Day, and School Year) are required' 
+            });
+        }
+
+        if ((program === 'MATH' || program === 'GEAS') && !attempt) {
+            return res.status(400).json({
+                error: 'Attempt is required for MATH and GEAS programs'
+            });
+        }
+
+        console.log('Searching for exam with:', {
+            program,
+            term,
+            day,
+            schoolYear,
+            attempt
+        });
+
+        let query = supabase
+            .from('set_generator')
+            .select('id, program, term, day, school_year')
+            .eq('program', program)
+            .eq('term', term)
+            .eq('day', day)
+            .eq('school_year', schoolYear);
+
+        if (program === 'MATH' || program === 'GEAS') {
+            query = query.eq('attempt', attempt);
+        }
+
+        const { data: examExists, error: examError } = await query;
+
+        console.log('Query results:', examExists);
+        console.log('Query error:', examError);
+
+        if (examError || !examExists || examExists.length === 0) {
+            return res.status(404).json({ 
+                error: 'No exam found',
+                message: `No exam found for ${program} (Term ${term}, Day ${day}, ${schoolYear}${attempt ? `, Attempt ${attempt}` : ''})`
+            });
         }
 
         const { data: setData, error: setError } = await supabase
             .from('set_generator')
             .select('questions')
             .eq('program', program)
+            .eq('term', term)
+            .eq('day', day)
+            .eq('school_year', schoolYear)
             .order('id', { ascending: false })
             .limit(1);
 
@@ -97,27 +144,11 @@ export const analyzeData = async (req, res) => {
                     const questionData = questions.find(q => q.examId === i);
                     const course = questionData ? questionData.course : 'Unknown';
 
-                    // Update course statistics
                     if (courseStats[course]) {
                         courseStats[course].totalQuestions++;
                         courseStats[course].totalCorrect += correct;
                         courseStats[course].totalAttempts += (correct + wrong);
                     }
-
-                    const optionKey = `Q ${i} Options`;
-                    const wrongAnswers = setRecords.filter(record => 
-                        record[questionKey] && record[questionKey].trim() === '0'
-                    ).map(record => record[optionKey]);
-
-                    const wrongOptionsCount = {};
-                    wrongAnswers.forEach(option => {
-                        if (option) {
-                            wrongOptionsCount[option] = (wrongOptionsCount[option] || 0) + 1;
-                        }
-                    });
-
-                    const mostCommonWrongOption = Object.entries(wrongOptionsCount)
-                        .sort(([,a], [,b]) => b - a)[0]?.[0] || 'N/A';
 
                     results.push({
                         questionNumber: i,
@@ -126,8 +157,7 @@ export const analyzeData = async (req, res) => {
                         correct,
                         wrong,
                         total: totalStudents,
-                        successRate: ((correct / totalStudents) * 100).toFixed(2),
-                        mostCommonWrongOption
+                        successRate: ((correct / totalStudents) * 100).toFixed(2)
                     });
                 }
             }

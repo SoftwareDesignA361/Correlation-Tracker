@@ -19,7 +19,7 @@ document.querySelector('.logout').addEventListener('click', function(event) {
 });
 
 function showContent(contentId) {
-    document.querySelectorAll('.container.text-center').forEach((section) => {
+    document.querySelectorAll('.container, .container-fluid').forEach((section) => {
         section.style.display = 'none';
     });
     const section = document.getElementById(contentId);
@@ -45,11 +45,46 @@ document.getElementById('exam-builderBtn').addEventListener('click', function() 
 
 document.querySelectorAll('.backBtn').forEach(button => {
     button.addEventListener('click', () => {
-        showContent('mainContent');  
+        const currentSection = button.closest('.container, .container-fluid');
+        
+        if (currentSection.id === 'analyzeData') {
+            const form = document.getElementById('analyzeDataForm');
+            if (form) {
+                form.reset();
+                
+                const programSelect = document.getElementById('analyzeProgram');
+                programSelect.selectedIndex = 0;
+                
+                const setSelect = document.getElementById('setSelect');
+                setSelect.innerHTML = '<option value="" disabled selected>Select Set</option>';
+                
+                document.getElementById('analysisOptions').style.display = 'none';
+                document.getElementById('analysisResults').style.display = 'none';
+                
+                document.getElementById('resultsContent').innerHTML = '';
+            }
+        }
+        
+        if (currentSection.id === 'question-pool') {
+            const form = document.getElementById('questionForm');
+            if (form) {
+                form.reset();
+                
+                document.getElementById('program').selectedIndex = 0;
+                document.getElementById('course').selectedIndex = 0;
+                document.getElementById('school_year').selectedIndex = 0;
+            }
+            
+            const questionTableContainer = document.getElementById('questionTableContainer');
+            if (questionTableContainer) {
+                questionTableContainer.innerHTML = '';
+            }
+        }
+        
+        showContent('mainContent');
         window.history.pushState({}, '', '/admin');
     });
 });
-
 
 window.addEventListener('popstate', function(event) {
     const path = window.location.pathname.split('/').pop();
@@ -63,6 +98,7 @@ window.addEventListener('popstate', function(event) {
         showContent('exam-builder');
     }
 });
+
 document.addEventListener('DOMContentLoaded', function() {
     const analyzeDataForm = document.querySelector('#analyzeData form');
 
@@ -80,12 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
-
 document.addEventListener('DOMContentLoaded', async function() {
     let analysisData = null;
 
-    // Fetch programs for the dropdown
     try {
         const response = await fetch('/api/analyze-programs');
         const programs = await response.json();
@@ -105,7 +138,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error fetching programs:', error);
     }
 
-    // Handle form submission
     const analyzeDataForm = document.getElementById('analyzeDataForm');
     if (analyzeDataForm) {
         analyzeDataForm.addEventListener('submit', async function(event) {
@@ -113,16 +145,29 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             const fileInput = document.getElementById('csvFile');
             const program = document.getElementById('analyzeProgram').value;
+            const term = document.getElementById('analyzeTerm').value;
+            const day = document.getElementById('analyzeDay').value;
+            const schoolYear = document.getElementById('schoolYear').value;
+            const attempt = document.getElementById('analyzeAttempt').value;
             const setSelect = document.getElementById('setSelect');
             
             if (!fileInput.files[0]) {
-                alert('Please select a CSV file');
+                showCustomPopup('Please select a CSV file');
+                return;
+            }
+
+            if ((program === 'MATH' || program === 'GEAS') && !attempt) {
+                showCustomPopup('Please select an attempt for MATH/GEAS programs');
                 return;
             }
 
             const formData = new FormData();
             formData.append('csvFile', fileInput.files[0]);
             formData.append('program', program);
+            formData.append('term', term);
+            formData.append('day', day);
+            formData.append('schoolYear', schoolYear);
+            formData.append('attempt', attempt || null);
 
             try {
                 const response = await fetch('/api/analyze-data', {
@@ -133,13 +178,15 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const data = await response.json();
                 
                 if (!response.ok) {
+                    if (response.status === 404) {
+                        showCustomPopup(data.message || 'No matching exam found in the database.');
+                        return;
+                    }
                     throw new Error(data.error || 'Error analyzing data');
                 }
 
-                // Store the data globally
                 analysisData = data;
 
-                // Populate set dropdown
                 setSelect.innerHTML = '<option value="" disabled selected>Select Set</option>';
                 
                 Object.keys(data).sort().forEach(set => {
@@ -149,18 +196,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                     setSelect.appendChild(option);
                 });
 
-                // Show analysis options
                 document.getElementById('analysisOptions').style.display = 'block';
                 document.getElementById('analysisResults').style.display = 'block';
 
             } catch (error) {
                 console.error('Error analyzing data:', error);
-                alert(error.message || 'Error analyzing data. Please try again.');
+                showCustomPopup(error.message || 'Error analyzing data. Please try again.');
             }
         });
     }
 
-    // Handle set selection change
     const setSelect = document.getElementById('setSelect');
     setSelect.addEventListener('change', function() {
         const selectedSet = this.value;
@@ -169,7 +214,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
-    // Handle overall statistics button click
     document.getElementById('overallStatsBtn').addEventListener('click', function() {
         if (analysisData) {
             displayOverallStats(analysisData);
@@ -192,13 +236,11 @@ function displayResults(data) {
             parseFloat(b.averageScore) - parseFloat(a.averageScore)
         );
         
-        // Create set header
         const setHeader = document.createElement('h3');
         setHeader.className = 'mt-4 mb-3';
-        setHeader.textContent = `Set ${set} Analysis`;
+        setHeader.textContent = `Set ${set} - Analysis`;
         resultsContainer.appendChild(setHeader);
 
-        // Create course performance summary
         const courseSummary = document.createElement('div');
         courseSummary.className = 'course-summary mb-4';
         courseSummary.innerHTML = '<h4>Course Performance Summary (Sorted by Average Score)</h4>';
@@ -228,27 +270,23 @@ function displayResults(data) {
         courseSummary.appendChild(courseSummaryTable);
         resultsContainer.appendChild(courseSummary);
 
-        // Create detailed question analysis table
         const questionTable = document.createElement('table');
         questionTable.className = 'table table-striped mb-5';
         
-        // Create table header
         const thead = document.createElement('thead');
         thead.innerHTML = `
             <tr>
-                <th>Question #</th>
+                <th>#</th>
                 <th>Course</th>
                 <th>Question</th>
                 <th>Correct</th>
                 <th>Wrong</th>
                 <th>Total Students</th>
                 <th>Success Rate</th>
-                <th>Most Common Wrong Answer</th>
             </tr>
         `;
         questionTable.appendChild(thead);
 
-        // Create table body
         const tbody = document.createElement('tbody');
         results.forEach(item => {
             const row = document.createElement('tr');
@@ -260,7 +298,6 @@ function displayResults(data) {
                 <td>${item.wrong}</td>
                 <td>${item.total}</td>
                 <td>${item.successRate}%</td>
-                <td>${item.mostCommonWrongOption}</td>
             `;
             tbody.appendChild(row);
         });
@@ -303,7 +340,6 @@ function displayOverallStats(data) {
         });
     });
 
-    // Calculate overall averages and create table
     const overallStats = Object.entries(courseStats).map(([course, stats]) => ({
         course,
         averageScore: (stats.scores.reduce((a, b) => a + b, 0) / stats.scores.length).toFixed(2),
@@ -311,7 +347,6 @@ function displayOverallStats(data) {
         totalStudents: stats.totalStudents
     })).sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
 
-    // Create table
     const table = document.createElement('table');
     table.className = 'table table-striped table-bordered';
     table.innerHTML = `
@@ -337,4 +372,38 @@ function displayOverallStats(data) {
 
     resultsContainer.appendChild(table);
 }
+
+document.getElementById('printPdfBtn').addEventListener('click', function() {
+    window.open('/paper', '_blank');
+});
+
+function showCustomPopup(message) {
+    const popup = document.createElement('div');
+    popup.className = 'custom-popup';
+    
+    const popupContent = document.createElement('div');
+    popupContent.className = 'popup-content';
+    
+    popupContent.innerHTML = `
+        <i class="fas fa-exclamation-circle" style="color: #B22222; font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h4>Exam Not Found</h4>
+        <p>${message}</p>
+        <button onclick="this.closest('.custom-popup').remove()">Close</button>
+    `;
+    
+    popup.appendChild(popupContent);
+    document.body.appendChild(popup);
+}
+
+document.getElementById('analyzeProgram').addEventListener('change', function() {
+    const attemptGroup = document.getElementById('analyzeAttemptGroup');
+    if (this.value === 'MATH' || this.value === 'GEAS') {
+        attemptGroup.style.display = 'block';
+        document.getElementById('analyzeAttempt').required = true;
+    } else {
+        attemptGroup.style.display = 'none';
+        document.getElementById('analyzeAttempt').required = false;
+        document.getElementById('analyzeAttempt').value = ''; // Reset the value
+    }
+});
 

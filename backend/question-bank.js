@@ -24,7 +24,9 @@ function courseVal(value){
         case 'Mechanical Engineering':
             return 'ME';
         case 'Industrial Engineering':
-            return 'IE';  
+            return 'IE';
+        case 'Architecture':
+            return 'AR';
         default:
             return value;
     }
@@ -102,114 +104,25 @@ export const insertQuizData = async (req, res) => {
     }
     res.json({ success: true });
 };
-/*// HASHMAP TO MAP PROGRAM NAMES TO CODES
-const programMap = {
-    'Computer Engineering': 'CPE',
-    'Civil Engineering': 'CE',
-    'Chemical Engineering': 'CHE',
-    'Electronics Engineering': 'ECE',
-    'Electrical Engineering': 'EE',
-    'Mechanical Engineering': 'ME',
-    'Industrial Engineering': 'IE',
-};
 
-// COURSE CODE LOOKUP USING HASHMAP
-function courseVal(value) {
-    return programMap[value] || value;
-}
-
-// FETCH UNIQUE PROGRAMS FROM DB USING A HASHMAP
-export const fetchPrograms = async (req, res) => {
-    const { data, error } = await supabase
-        .from('program_course')
-        .select('program')
-        .neq('program', null);
-
-    if (error) {
-        console.error('Error fetching programs:', error);
-        return res.status(500).json({ error: 'Error fetching programs' });
-    }
-
-    // Using a hashmap to store unique programs
-    const programMap = {};
-    data.forEach(item => {
-        programMap[item.program] = true;  // Add program as key
-    });
-
-    // Return unique program names (keys of the hashmap)
-    res.json(Object.keys(programMap));
-};
-
-// FETCH UNIQUE COURSES FOR A SPECIFIC PROGRAM USING HASHMAP
-export const fetchCourses = async (req, res) => {
+export const fetchQuestions = async (req, res) => {
     const program = req.query.program;
-    const { data, error } = await supabase
-        .from('program_course')
-        .select(courseVal(program))
-        .neq(courseVal(program), null);
-
-    if (error) {
-        console.error('Error fetching courses:', error);
-        return res.status(500).json({ error: 'Error fetching courses' });
-    }
-
-    // Using a hashmap to store unique courses for the given program
-    const courseMap = {};
-    data.forEach(item => {
-        courseMap[item[courseVal(program)]] = true;
-    });
-
-    // Return unique courses
-    res.json(Object.keys(courseMap));
-};
-
-// FETCH UNIQUE SCHOOL YEARS FROM DB USING A HASHMAP
-export const fetchYears = async (req, res) => {
-    const { data, error } = await supabase
-        .from('program_course')
-        .select('school_year')
-        .neq('school_year', null);
-
-    if (error) {
-        console.error('Error fetching years:', error);
-        return res.status(500).json({ error: 'Error fetching years' });
-    }
-
-    // Using a hashmap to store unique school years
-    const yearMap = {};
-    data.forEach(item => {
-        yearMap[item.school_year] = true;
-    });
-
-    // Return unique school years
-    res.json(Object.keys(yearMap));
-};
-
-// INSERTING QUIZ DATA USING A HASHMAP FOR ORGANIZATION
-export const insertQuizData = async (req, res) => {
-    const { program, course, year, question, choice_1, choice_2, choice_3, answer } = req.body;
-
-    // Store quiz data in a hashmap (object) before inserting
-    const quizData = {
-        program: program,
-        course: course,
-        school_year: year,
-        question: question,
-        choice_1: choice_1,
-        choice_2: choice_2,
-        choice_3: choice_3,
-        answer: answer,
-    };
-
-    // Insert the hashmap data into the database
-    const { error } = await supabase
-        .from('question_bank_test')
-        .insert(quizData);
+    const tableName = `${program}_question_bank`;
     
-    if (error) {
-        console.error('Error inserting quiz:', error);
-        return res.status(500).json({ error: 'Error inserting quiz' });
+    try {
+        const { data, error } = await supabase
+            .from(tableName)
+            .select('*')
+            .order('course', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching questions:', error);
+            return res.status(500).json({ error: 'Error fetching questions' });
+        }
+
+        res.json(data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Server error' });
     }
-    
-    res.json({ success: true });
-};*/
+};

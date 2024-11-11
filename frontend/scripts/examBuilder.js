@@ -15,6 +15,155 @@ function updateTotal(){
     totalCell.textContent = total;
 }
 
+function checkMinimumQuestions() {
+    const totalQuestions = courseItems.reduce((sum, currentValue) => sum + currentValue, 0);
+    if (totalQuestions < 100) {
+        const popup = document.createElement('div');
+        popup.className = 'custom-popup';
+        popup.innerHTML = `
+            <div class="popup-content">
+                <h4>Not Enough Questions</h4>
+                <p>Please select at least 20 questions in total.</p>
+                <p>Current total: ${totalQuestions}</p>
+                <button class="btn btn-secondary" onclick="this.parentElement.parentElement.remove()">Close</button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        return false;
+    }
+    return true;
+}
+
+function validateInputs() {
+    const program = document.getElementById('select-program').value;
+    const schoolYear = document.getElementById('school-year').value;
+    const term = document.getElementById('term').value;
+    const day = document.getElementById('day').value;
+    const sets = document.getElementById('sets').value;
+    const attempt = document.getElementById('attempt').value;
+    
+    const hasItems = courseItems && courseItems.some(item => item > 0);
+    
+    if (!program) {
+        alert('Please select a program');
+        return false;
+    }
+    if (!schoolYear) {
+        alert('Please select a school year');
+        return false;
+    }
+    if (!term) {
+        alert('Please select a term');
+        return false;
+    }
+    if (!day) {
+        alert('Please select a day');
+        return false;
+    }
+    if ((program === 'MATH' || program === 'GEAS') && !attempt) {
+        alert('Please select an attempt');
+        return false;
+    }
+    if (!sets || sets <= 0) {
+        alert('Please enter a valid number of sets');
+        return false;
+    }
+    if (!hasItems) {
+        alert('Please select at least one course item');
+        return false;
+    }
+    
+    if (!checkMinimumQuestions()) {
+        return false;
+    }
+    
+    return true;
+}
+
+function showErrorPopup(message) {
+    const popup = document.createElement('div');
+    popup.className = 'custom-popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <h4>Error</h4>
+            <p>${message}</p>
+            <button class="btn btn-secondary" onclick="this.parentElement.parentElement.remove()">Close</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+}
+
+function resetExamBuilder() {
+    const programSelect = document.getElementById('select-program');
+    if (programSelect) {
+        programSelect.selectedIndex = 0;
+    }
+
+    const schoolYearSelect = document.getElementById('school-year');
+    if (schoolYearSelect) {
+        schoolYearSelect.selectedIndex = 0;
+    }
+
+    const termSelect = document.getElementById('term');
+    if (termSelect) {
+        termSelect.selectedIndex = 0;
+    }
+
+    const daySelect = document.getElementById('day');
+    if (daySelect) {
+        daySelect.selectedIndex = 0;
+    }
+
+    const setsInput = document.getElementById('sets');
+    if (setsInput) {
+        setsInput.value = '';
+    }
+
+    const courseTable = document.getElementById('course-table');
+    if (courseTable) {
+        courseTable.innerHTML = `
+            <thead>
+                <tr><th>Course Name</th><th>Number of Items</th></tr>
+            </thead>
+        `;
+    }
+
+    courseItems = [];
+    courseList = [];
+    total = 0;
+
+    const pdfButton = document.getElementById('get-pdf');
+    if (pdfButton) {
+        pdfButton.style.display = 'none';
+    }
+
+    localStorage.removeItem('currentExamId');
+
+    const attemptSelect = document.getElementById('attempt');
+    if (attemptSelect) {
+        attemptSelect.selectedIndex = 0;
+    }
+
+    const attemptGroup = document.getElementById('attemptGroup');
+    if (attemptGroup) {
+        attemptGroup.style.display = 'none';
+    }
+}
+
+function showLoadingPopup() {
+    const popup = document.createElement('div');
+    popup.className = 'loading-popup';
+    popup.innerHTML = `
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h4>Generating Examination</h4>
+            <p>Please wait while we generate your exam sets...</p>
+        </div>
+    `;
+    document.body.appendChild(popup);
+    return popup;
+}
+
 //DISPLAY PROGRAMS
 const programDisplay = async () => {
     //GET DATA FROM BACKEND
@@ -62,10 +211,19 @@ const courseDisplay = async () => {
         const inputElement = document.createElement('input');
         inputElement.type = 'number';
         inputElement.value = 0;
+        inputElement.min = 0;
 
         courseItems = new Array(courses.length).fill(0);
         inputElement.addEventListener('input', (e) =>{
-            updateArray(index, Number(e.target.value));
+            const value = e.target.value === '' || e.target.value === null ? 0 : Number(e.target.value);
+            updateArray(index, value);
+        });
+
+        inputElement.addEventListener('blur', (e) => {
+            if (e.target.value === '' || e.target.value === null) {
+                e.target.value = 0;
+                updateArray(index, 0);
+            }
         });
 
         inputCell.appendChild(inputElement);
@@ -87,13 +245,37 @@ const courseDisplay = async () => {
 }
 programBuilder.addEventListener('change', courseDisplay);
 
+programBuilder.addEventListener('change', function() {
+    const attemptGroup = document.getElementById('attemptGroup');
+    if (this.value === 'MATH' || this.value === 'GEAS') {
+        attemptGroup.style.display = 'block';
+        document.getElementById('attempt').required = true;
+    } else {
+        attemptGroup.style.display = 'none';
+        document.getElementById('attempt').required = false;
+        document.getElementById('attempt').value = '';
+    }
+    courseDisplay();
+});
+
 document.getElementById('generate').addEventListener('click', async (e) => {
     e.preventDefault();
+    
+    if (!validateInputs()) {
+        return;
+    }
+
+    const loadingPopup = showLoadingPopup();
+
     const data = {
         courses: courseList,
         items: courseItems,
         sets: document.getElementById('sets').value,
-        program: document.getElementById('select-program').value
+        program: document.getElementById('select-program').value,
+        schoolYear: document.getElementById('school-year').value,
+        term: document.getElementById('term').value,
+        day: document.getElementById('day').value,
+        attempt: document.getElementById('attempt').value || null
     };
 
     try {
@@ -106,26 +288,48 @@ document.getElementById('generate').addEventListener('click', async (e) => {
         });
 
         const result = await response.json();
-        if (result.success) {
-            alert(`Questionnaire has been generated. Please copy this code to access the questionnaire: ${result.generateID}`);
-            document.getElementById('get-pdf').style.display = 'block'; // Unhide the "Print PDF" button on success
+        
+        loadingPopup.remove();
+        
+        if (result.error) {
+            showErrorPopup(result.error);
+            return;
+        }
+        
+        if (result.success && result.generateID) {
+            localStorage.setItem('currentExamId', result.generateID);
+            
+            const pdfButton = document.getElementById('get-pdf');
+            if (pdfButton) {
+                pdfButton.style.display = 'block';
+            }
+            
+            const codeInput = document.getElementById('questionnaireCode');
+            if (codeInput) {
+                codeInput.value = result.generateID;
+                $('#questionnaireModal').modal('show');
+            }
+
+            resetExamBuilder();
         } else {
-            console.error("Error inserting data:", result.error);
-            alert("Failed to generate the questionnaire. Please try again.");
+            throw new Error('Failed to generate questionnaire');
         }
     } catch (error) {
-        console.error("Failed to fetch from API:", error);
-        alert("Error connecting to the server.");
+        loadingPopup.remove();
+        
+        console.error("Failed to generate questionnaire:", error);
+        showErrorPopup(error.message || "Error generating the questionnaire. Please try again.");
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure the Generate button is present
     const generateButton = document.getElementById('generate');
     if (generateButton) {
         generateButton.addEventListener('click', async (e) => {
             e.preventDefault();
             
             const data = {
-                courses: courseList, // Ensure these variables are accessible
+                courses: courseList,
                 items: courseItems,
                 sets: setNumber.value,
                 program: programBuilder.value
@@ -141,11 +345,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const result = await res.json();
                 if (result.success) {
-                    // Set the generated code in the input field of the modal
                     const codeInput = document.getElementById("questionnaireCode");
                     if (codeInput) {
                         codeInput.value = result.generateID;
-                        // Show the modal
                         $('#questionnaireModal').modal('show');
                     }
                 } else {
@@ -157,21 +359,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Copy code function
     const copyCode = () => {
         const codeInput = document.getElementById("questionnaireCode");
         const copyMessage = document.getElementById("copyMessage");
 
         if (codeInput) {
             codeInput.select();
-            codeInput.setSelectionRange(0, 99999); // For mobile devices
+            codeInput.setSelectionRange(0, 99999);
 
             navigator.clipboard.writeText(codeInput.value)
                 .then(() => {
-                    // Show "Code copied" message
                     if (copyMessage) {
                         copyMessage.style.display = 'inline';
-                        // Hide the message after 3 seconds
                         setTimeout(() => {
                             copyMessage.style.display = 'none';
                         }, 3000);
@@ -183,17 +382,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Attach the copyCode function to the Copy Code button
     const copyButton = document.getElementById('copyCodeButton');
     if (copyButton) {
         copyButton.addEventListener('click', copyCode);
+    }
+
+    const examBuilderBackBtn = document.querySelector('#exam-builder .backBtn');
+    if (examBuilderBackBtn) {
+        examBuilderBackBtn.addEventListener('click', () => {
+            resetExamBuilder();
+            showContent('mainContent');
+            window.history.pushState({}, '', '/admin');
+        });
+    }
 });
 
-document.getElementById('get-pdf').addEventListener('click', async () => {
+$('#questionnaireModal').on('hidden.bs.modal', function () {
+    resetExamBuilder();
+});
+
+document.getElementById('get-pdf')?.addEventListener('click', async () => {
     const examId = localStorage.getItem('currentExamId');
     if (!examId) {
         alert('Please generate an exam first');
         return;
     }
-    window.location.href = `/paper?examId=${examId}`;
+    window.open(`/paper?examId=${examId}`, '_blank');
 });
+

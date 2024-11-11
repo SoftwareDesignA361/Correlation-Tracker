@@ -11,7 +11,7 @@ import fileUpload from 'express-fileupload';
 import validateLogin from './backend/login-validation.js';
 
 //question-bank [BACKEND]
-import { fetchPrograms, fetchCourses, fetchYears, insertQuizData } from './backend/question-bank.js';
+import { fetchPrograms, fetchCourses, fetchYears, insertQuizData, fetchQuestions } from './backend/question-bank.js';
 
 //exam-builder [BACKEND]
 import { getCourseQuestions, getQuestionnaire } from './backend/exam-builder.js';
@@ -45,6 +45,7 @@ app.get('/api/programs', fetchPrograms);
 app.get('/api/courses', fetchCourses);
 app.get('/api/years', fetchYears);
 app.post('/api/quiz', insertQuizData);
+app.get('/api/questions', fetchQuestions);
 
 //EXAM BUILDER FETCH
 app.post('/api/generate', getCourseQuestions);

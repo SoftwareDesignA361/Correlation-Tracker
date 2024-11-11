@@ -12,6 +12,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="/designs/adminPage.css" rel="stylesheet">
 
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     </head>
     <body>
         <header class="d-flex justify-content-between align-items-center p-3">
@@ -30,97 +33,246 @@
                 <button class="btn btn-primary btn-lg mx-2" id="analyzeDataBtn">Analyze Data</button>
                 <button class="btn btn-primary btn-lg mx-2" id="question-poolBtn">Question Bank</button>
                 <button class="btn btn-primary btn-lg mx-2" id="exam-builderBtn">Test Generator</button>
+                <button class="btn btn-primary btn-lg mx-2" id="printPdfBtn">Print PDF</button>
             </div>
         </main>
 
-        <!-- Hidden Form for Analyze Data -->
-        <div class="container text-center" id="analyzeData" style="display:none;">
-            <h2 class="mt-5">Manage Correlation</h2>
-            <form id="analyzeDataForm">
-                <div class="form-group">
-                    <label for="analyzeProgram">Program:</label>
-                    <select name="program" id="analyzeProgram" class="form-control" required>
-                        <option value="" disabled selected>Select Program</option>
-                    </select>
+        <div class="container-fluid" id="analyzeData" style="display:none;">
+            <h2 class="correlation-title text-center">Manage Correlation</h2>
+            <div class="row">
+                <!-- Left Column - Input Form -->
+                <div class="col-md-3">
+                    <div class="input-section">
+                        <form id="analyzeDataForm">
+                            <div class="form-group">
+                                <label for="analyzeProgram">Program:</label>
+                                <select name="program" id="analyzeProgram" class="form-control" required>
+                                    <option value="" disabled selected>Select Program</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="analyzeTerm">Term:</label>
+                                <select name="term" id="analyzeTerm" class="form-control" required>
+                                    <option value="" disabled selected>Select Term</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="analyzeAttemptGroup" style="display: none;">
+                                <label for="analyzeAttempt">Attempt:</label>
+                                <select name="attempt" id="analyzeAttempt" class="form-control">
+                                    <option value="" disabled selected>Select Attempt</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="analyzeDay">Day:</label>
+                                <select name="day" id="analyzeDay" class="form-control" required>
+                                    <option value="" disabled selected>Select Day</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="schoolYear">School Year:</label>
+                                <select name="schoolYear" id="schoolYear" class="form-control">
+                                    <option value="2024-2025" selected>2024-2025</option>
+                                    <option value="2025-2026">2025-2026</option>
+                                    <option value="2026-2027">2026-2027</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="csvFile">Upload CSV File:</label>
+                                <input type="file" name="csvFile" id="csvFile" accept=".csv" class="form-control-file" required>
+                            </div>
+                            <div class="button-container">
+                                <button type="submit" class="btn btn-primary">Submit Analysis</button>
+                                <button type="button" class="btn btn-secondary backBtn">Back</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="schoolYear">School Year:</label>
-                    <select name="schoolYear" id="schoolYear" class="form-control">
-                        <option value="2024-2025" selected>2024 - 2025</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="csvFile">Upload CSV File:</label>
-                    <input type="file" name="csvFile" id="csvFile" accept=".csv" class="form-control-file" required>
-                </div>
-                <div class="button-container">
-                    <button type="submit" class="btn btn-primary">Submit Analysis</button>
-                    <button type="button" class="btn btn-secondary btn-lg backBtn">Back</button>
-                </div>
-            </form>
 
-            <div id="analysisOptions" style="display:none;" class="mt-4">
-                <div class="form-group" id="setSelectGroup">
-                    <label for="setSelect">Select Set:</label>
-                    <select name="setSelect" id="setSelect" class="form-control">
-                        <option value="" disabled selected>Select Set</option>
-                    </select>
+                <!-- Right Column - Results -->
+                <div class="col-md-9">
+                    <div class="results-section">
+                        <div id="analysisOptions" style="display:none;" class="mb-4">
+                            <button id="overallStatsBtn" class="btn btn-primary mt-3">View Overall Statistics</button>
+                            <div class="form-group" id="setSelectGroup">
+                                <label for="setSelect">Select Set:</label>
+                                <select name="setSelect" id="setSelect" class="form-control">
+                                    <option value="" disabled selected>Select Set</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="analysisResults" style="display:none;">
+                            <h3 class="results-title">Analysis Results</h3>
+                            <div id="resultsContent"></div>
+                        </div>
+                    </div>
                 </div>
-                <button id="overallStatsBtn" class="btn btn-primary mt-3">View Overall Statistics</button>
             </div>
-        </div>
-        <div class="container text-center" id="analysisResults" style="display:none;">
-            <h2 class="mt-5">Analysis Results</h2>
-            <div id="resultsContent"></div>
-            <button type="button" class="btn btn-secondary btn-lg backBtn mt-3">Back</button>
         </div>
 
         <!-- Question Bank -->
-        <div class="container text-center" id="question-pool">
-            <form id="questionForm">
-                <select id="program" required>
-                    <option value="" disabled selected>--Select a Program--</option>
-                </select>
-                
-                <select id="course" required>
-                    <option value="" disabled selected>--Select a Course Code--</option>
-                </select>
-                
-                <select id="school_year" required>
-                    <option value="" disabled selected>School Year</option>
-                </select>
-                <input type="text" placeholder="Question" id="question" required>
-                <input type="text" placeholder="Choice: 1" id="choice_1" required>
-                <input type="text" placeholder="Choice: 2" id="choice_2" required>
-                <input type="text" placeholder="Choice: 3" id="choice_3" required>
-                <input type="text" placeholder="Choice: 4" id="choice_4">
-                <input type="submit" id="submit">
-            </form>
-            <button class="btn btn-secondary btn-lg mt-4 backBtn">Back</button>
+        <div class="container-fluid" id="question-pool">
+            <h2 class="question-bank-title text-center mb-4">Question Bank</h2>
+            <div class="row">
+                <!-- Left Column - Form -->
+                <div class="col-md-4">
+                    <div class="question-form-container">
+                        <form id="questionForm">
+                            <div class="form-group">
+                                <select id="program" class="form-control" required>
+                                    <option value="" disabled selected>--Select a Program--</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select id="school_year" class="form-control" required>
+                                    <option value="" disabled selected>School Year</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <select id="course" class="form-control" required>
+                                    <option value="" disabled selected>--Select a Course Code--</option>
+                                </select>
+                            </div>
+                            
+
+                            <div class="form-group">
+                                <textarea class="form-control" 
+                                        placeholder="Question" 
+                                        id="question" 
+                                        rows="4" 
+                                        required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Choice: 1" id="choice_1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Choice: 2" id="choice_2" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Choice: 3" id="choice_3" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Choice: 4" id="choice_4" required>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" id="submit" class="btn btn-primary w-100">Add Question</button>
+                                <div id="successMessage" class="success-message mt-2" style="display: none;">
+                                    Question has been added successfully!
+                                </div>
+                            </div>
+                        </form>
+                        <div class="text-center mt-4">
+                            <button class="btn btn-secondary btn-lg backBtn">Back</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column - Table -->
+                <div class="col-md-8">
+                    <div class="question-table-container">
+                        <div id="questionTableContainer">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Questionnaire Generator -->
-        <div class="container text-center" id="exam-builder">
-            <h2 class="generator-title">Examination Generator</h2>
-            <div class="form-group">
-                <select class="form-control custom-select" id="select-program" required>
-                    <option value="" disabled selected>--Select a Program--</option>
-                </select>
-            </div>
-            <div class="table-responsive">
-                <table class="table" id="course-table">
-                    <thead>
-                        <tr><th>Course Name</th><th>Number of Items</th></tr>
-                    </thead>
-                </table>
-            </div>
-            <input type="number" class="form-control" placeholder="Number of Sets" id="sets" required>
-            <div class="button-container">
-                <div>
-                    <button type="submit" class="btn btn-primary" id="generate">Generate</button>
-                    <button class="btn btn-secondary" id="get-pdf" style="display:none;">Print PDF</button>
+        <div class="container-fluid" id="exam-builder">
+            <h2 class="generator-title text-center">Examination Generator</h2>
+            <div class="row">
+                <!-- Left Column - Inputs -->
+                <div class="col-md-4">
+                    <div class="input-section">
+                        <div class="form-group">
+                            <label for="select-program" class="form-label">Program</label>
+                            <select class="form-control custom-select" id="select-program" required>
+                                <option value="" disabled selected>--Select a Program--</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="school-year" class="form-label">School Year</label>
+                            <select class="form-control custom-select" id="school-year" required>
+                                <option value="" disabled selected>--Select School Year--</option>
+                                <option value="2024-2025">2024 - 2025</option>
+                                <option value="2025-2026">2025 - 2026</option>
+                                <option value="2026-2027">2026 - 2027</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="term" class="form-label">Term</label>
+                            <select class="form-control custom-select" id="term" required>
+                                <option value="" disabled selected>--Select Term--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="attemptGroup" style="display: none;">
+                            <label for="attempt" class="form-label">Attempt</label>
+                            <select class="form-control custom-select" id="attempt" required>
+                                <option value="" disabled selected>--Select Attempt--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="day" class="form-label">Day</label>
+                            <select class="form-control custom-select" id="day" required>
+                                <option value="" disabled selected>--Select Day--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sets" class="form-label">Number of Sets</label>
+                            <input type="number" class="form-control" placeholder="Number of Sets" id="sets" required>
+                        </div>
+                    </div>
                 </div>
-                <button class="btn btn-secondary backBtn">Back</button>
+
+                <!-- Right Column - Course Items -->
+                <div class="col-md-8">
+                    <div class="course-section">
+                        <label for="course-table" class="form-label">Course Items</label>
+                        <div class="table-responsive">
+                            <table class="table" id="course-table">
+                                <thead>
+                                    <tr><th>Course Name</th><th>Number of Items</th></tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Buttons -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="button-container">
+                        <div>
+                            <button type="submit" class="btn btn-primary" id="generate">Generate</button>
+                            <button type="button" class="btn btn-primary" id="get-pdf" style="display: none;">Print PDF</button>
+                        </div>
+                        <button class="btn btn-secondary backBtn">Back</button>
+                    </div>
+                </div>
             </div>
         </div>
 
