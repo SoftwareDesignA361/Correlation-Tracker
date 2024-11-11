@@ -65,6 +65,25 @@ main h2 {
 
 .button-container {
     display: flex;
+    justify-content: space-between; /* Ensures the child elements are pushed to the sides */
+    align-items: center; /* Keeps buttons vertically aligned */
+    padding-top: 20px; /* Provides some spacing from the elements above */
+}
+
+.button-container > div {
+    display: flex;
+    gap: 10px; /* Space between "Generate" and "Print PDF" buttons */
+}
+      
+
+.btn-secondary {
+    background-color: var(--header-color);
+    color: var(--header-text-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--trd-color); /* Hover effect */
+=======
     justify-content: center;
     align-items: center;
     margin-top: 20px;
@@ -302,6 +321,9 @@ main .btn {
 }
 
 .button-container {
+    display: flex; /* Space out buttons */
+    gap: 10px; /* Gap between buttons */
+=======
     display: flex;
     justify-content: space-between; 
     gap: 10px; 

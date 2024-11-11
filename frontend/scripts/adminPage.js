@@ -337,3 +337,4 @@ function displayOverallStats(data) {
 
     resultsContainer.appendChild(table);
 }
+
