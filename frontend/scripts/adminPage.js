@@ -18,88 +18,84 @@ document.querySelector('.logout').addEventListener('click', function(event) {
     }
 });
 
-function showContent(url) {
-    if (url === '/admin/correlation1') {
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('correlation1').style.display = 'block';
-    } else if (url === '/admin/correlation2') {
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('correlation2').style.display = 'block';
-    //BACK END EDIT
-    } else if (url === '/admin/question-pool') {
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('question-pool').style.display = 'block';
-    } else if (url === '/admin/exam-builder') {
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('exam-builder').style.display = 'block';
-    }
-    else {
-        document.getElementById('correlation1').style.display = 'none';
-        document.getElementById('correlation2').style.display = 'none';
-        document.getElementById('question-pool').style.display = 'none';
-        document.getElementById('exam-builder').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
+function showContent(contentId) {
+    document.querySelectorAll('.container.text-center').forEach((section) => {
+        section.style.display = 'none';
+    });
+    const section = document.getElementById(contentId);
+    if (section) {
+        section.style.display = 'block';
     }
 }
 
-document.getElementById('correlation1Btn').addEventListener('click', function() {
-    window.history.pushState({}, '', '/admin/correlation1');
-    showContent('/admin/correlation1');
+document.getElementById('analyzeDataBtn').addEventListener('click', function() {
+    showContent('analyzeData');
+    window.history.pushState({}, '', '/admin/analyze-data');
 });
 
-document.getElementById('correlation2Btn').addEventListener('click', function() {
-    window.history.pushState({}, '', '/admin/correlation2');
-    showContent('/admin/correlation2');
-});
-
-//BACK END EDIT
 document.getElementById('question-poolBtn').addEventListener('click', function() {
+    showContent('question-pool');
     window.history.pushState({}, '', '/admin/question-pool');
-    showContent('/admin/question-pool');
 });
+
 document.getElementById('exam-builderBtn').addEventListener('click', function() {
+    showContent('exam-builder');
     window.history.pushState({}, '', '/admin/exam-builder');
-    showContent('/admin/exam-builder');
 });
 
-document.getElementById('backBtn1').addEventListener('click', function() {
-    const studentId = document.getElementById('studentId1').value;
-    if (studentId !== "") {
-        if (confirm("You have unfinished work, do you still want to go back to the main page?")) {
-            document.getElementById('studentId1').value = "";
-            window.history.pushState({}, '', '/admin');
-            showContent('/admin');
-        }
-    } else {
+document.querySelectorAll('.backBtn').forEach(button => {
+    button.addEventListener('click', () => {
+        showContent('mainContent');  
         window.history.pushState({}, '', '/admin');
-        showContent('/admin');
-    }
+    });
 });
 
-document.getElementById('backBtn2').addEventListener('click', function() {
-    const studentId = document.getElementById('studentId2').value;
-    if (studentId !== "") {
-        if (confirm("You have unfinished work, do you still want to go back to the main page?")) {
-            document.getElementById('studentId2').value = "";
-            window.history.pushState({}, '', '/admin');
-            showContent('/admin');
-        }
-    } else {
-        window.history.pushState({}, '', '/admin');
-        showContent('/admin');
-    }
-});
-
-document.getElementById('backBtn3').addEventListener('click', ()=>{
-    window.history.pushState({},'', '/admin');
-    showContent('/admin')
-});
-
-document.getElementById('backBtn4').addEventListener('click', ()=>{
-    window.history.pushState({},'', '/admin');
-    showContent('/admin')
-});
 
 window.addEventListener('popstate', function(event) {
-    showContent(window.location.pathname);
+    const path = window.location.pathname.split('/').pop();
+    if (path === 'admin') {
+        showContent('mainContent');
+    } else if (path === 'analyze-data') {
+        showContent('analyzeData');
+    } else if (path === 'question-pool') {
+        showContent('question-pool');
+    } else if (path === 'exam-builder') {
+        showContent('exam-builder');
+    }
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const submitButton = document.getElementById('analysisForm'); // Assuming the form has this ID
+
+    submitButton.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting traditionally
+        
+        const resultsContainer = document.getElementById('analysisResults');
+        // Check if the results container is visible
+        if (resultsContainer.style.display === 'none' || resultsContainer.style.display === '') {
+            resultsContainer.style.display = 'block'; // Show the container
+        } else {
+            resultsContainer.style.display = 'none'; // Hide the container if it's already visible
+        }
+    });
+});
+
+
+
+function displayResults(data) {
+    const resultsContainer = document.getElementById('analysisResults');
+    resultsContainer.innerHTML = '';  // Clear previous results
+
+    // Example of dynamically creating content based on data
+    const header = document.createElement('h3');
+    header.textContent = 'Course Performance';
+    resultsContainer.appendChild(header);
+
+    // Assuming 'data' is an array of course performance
+    data.forEach(course => {
+        const courseDiv = document.createElement('div');
+        courseDiv.textContent = `${course.name}: ${course.performance}%`;
+        resultsContainer.appendChild(courseDiv);
+    });
+
+    resultsContainer.style.display = 'block';  // Show the results
+}

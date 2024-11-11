@@ -120,6 +120,16 @@ app.get('/paper', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'pages', 'questionnaireFormat.html'));
 });
 
+app.get('/analyze-data', isAuthenticated, (req, res) => {
+
+    if (req.session.user && req.session.user.role === 'Admin') {
+        res.sendFile(path.join(__dirname, 'frontend', 'pages', 'analyzeData.html')); 
+    } else {
+        res.status(403).send('Access Denied');
+    }
+});
+
+
 app.listen(3000, () => {
     console.log('Server running on port 3000');
     console.log('login page: http://localhost:3000/login');
