@@ -83,8 +83,9 @@ export const fetchYears = async (req, res) => {
 // INSERTING DATA
 export const insertQuizData = async (req, res) => {
     const { program, course, year, question, choice_1, choice_2, choice_3, answer } = req.body;
+    console.log(program)
     const { error } = await supabase
-        .from('question_bank_test')
+        .from(`${program}_question_bank`)
         .insert({
             program: program,
             course: course,
@@ -93,7 +94,7 @@ export const insertQuizData = async (req, res) => {
             choice_1: choice_1,
             choice_2: choice_2,
             choice_3: choice_3,
-            answer: answer,
+            choice_4: answer,
         });
     if (error) {
         console.error('Error inserting quiz:', error);
