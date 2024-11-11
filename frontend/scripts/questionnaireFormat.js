@@ -25,6 +25,7 @@ const generateQuestions = (dataQuestion, program, idValue, set) => {
         <li>Fill in the circle completely with a blue or black pen.</li>
         <li>Choose only one answer for each question.</li>
         <li>Erasures or corrections will not be accepted.</li>
+        <li>Cheating is strictly probihited</li>
         <li>Each question is worth 1 point.</li>
       </ol>
     </div>

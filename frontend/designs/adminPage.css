@@ -63,7 +63,6 @@ main h2 {
     border-color: var(--header-color);
 }
 
-/* Container for buttons to ensure proper alignment */
 .button-container {
     display: flex;
     justify-content: space-between; /* Ensures the child elements are pushed to the sides */
@@ -84,37 +83,38 @@ main h2 {
 
 .btn-secondary:hover {
     background-color: var(--trd-color); /* Hover effect */
+=======
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-/* Styling for all buttons */
 .button-container .btn {
-    padding: 10px 20px; /* Uniform padding */
-    font-size: 1rem; /* Consistent font size */
-    border-radius: 4px; /* Rounded corners for aesthetic */
-    margin: 0 10px; /* Spacing between buttons */
-    border: none; /* No border for a cleaner look */
-    cursor: pointer; /* Cursor to pointer to indicate clickable */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for visual feedback */
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Specific style for primary action button */
 .button-container .btn-primary {
     background-color: var(--secondary-color);
-    color: var(--background-color); /* Ensuring text is visible against the button color */
+    color: var(--background-color);
 }
 
 .button-container .btn-primary:hover {
-    background-color: var(--trd-color); /* Darker shade on hover */
+    background-color: var(--trd-color);
 }
 
-/* Style for secondary action buttons */
 .button-container .btn-secondary {
     background-color: var(--header-color);
     color: var(--header-text-color);
 }
 
 .button-container .btn-secondary:hover {
-    background-color: var(--trd-color); /* Hover effect for consistency */
+    background-color: var(--trd-color);
     color: var(--background-color);
 }
 
@@ -123,7 +123,6 @@ main .btn {
     margin-top: 20px;
     margin-right: 10px;
 }
-/*Design for Question Bank*/
 #questionForm {
     background-color: var(--background-color);
     padding: 20px;
@@ -165,41 +164,36 @@ main .btn {
     background-color: var(--trd-color);
 }
 
-/*Design for Exam Generator*/
-/* Examination Generator Styles */
 #exam-builder h2 {
     color: var(--secondary-color);
-    margin-bottom: 20px; /* Adjusted for visual spacing */
+    margin-bottom: 20px; 
 }
 
-/* Style form elements for clarity and visual appeal */
 #exam-builder .form-control {
-    font-size: 1.2rem;      /* Increased font size for better readability */
-    padding: 12px 20px;     /* Larger padding for a more substantial appearance */
-    height: auto;           /* Adjusts height based on content and padding */
-    display: block;         /* Ensures the input fills the container */
-    width: 100%;            /* Full width for consistency */
-    border: 2px solid var(--secondary-color); /* Makes border thicker for better visibility */
-    border-radius: 5px;     /* Smoother corners for a modern look */
-    box-shadow: none;       /* Removing any default shadows if not needed */
-    margin-bottom: 10px;    /* Ensures spacing between form elements */
+    font-size: 1.2rem;      
+    padding: 12px 20px;     
+    height: auto;           
+    display: block;         
+    width: 100%;            
+    border: 2px solid var(--secondary-color); 
+    border-radius: 5px;     
+    box-shadow: none;       
+    margin-bottom: 10px;    
 }
 
 #exam-builder .form-control:focus {
-    border-color: var(--trd-color); /* More noticeable focus color */
-    box-shadow: 0 0 0.5rem rgba(178, 34, 34, 0.25); /* Larger shadow to emphasize focus */
+    border-color: var(--trd-color); 
+    box-shadow: 0 0 0.5rem rgba(178, 34, 34, 0.25); 
 }
-/* Spacing adjustments for container elements */
+
 #exam-builder .form-group, #exam-builder .button-container {
-    margin-top: 20px; /* Ensures adequate spacing between form sections */
+    margin-top: 20px; 
 }
 
-/* If buttons are too close to the inputs */
 #exam-builder .button-container .btn {
-    margin: 10px 5px; /* Adjusts spacing around buttons to ensure they don't crowd the inputs */
+    margin: 10px 5px; 
 }
 
-/* Enhance table aesthetics to fit overall design */
 #exam-builder .table {
     margin-top: 20px;
     border-collapse: collapse;
@@ -211,29 +205,28 @@ main .btn {
 }
 
 #exam-builder th, #exam-builder td {
-    border: 1px solid #ddd; /* Subtle border for definition */
+    border: 1px solid #ddd; 
     padding: 8px;
 }
 #exam-builder .custom-select {
-    font-size: 1.2rem;  /* Increased font size for better readability */
-    padding: 12px 20px; /* Larger padding for a more accessible touch area */
-    height: auto;       /* Adjusts height based on content and padding */
-    display: block;     /* Ensures the select fills the container */
-    width: 100%;        /* Full width for consistency */
-    border: 2px solid var(--secondary-color); /* Makes border thicker for visibility */
-    border-radius: 5px; /* Smooth corners for modern look */
+    font-size: 1.2rem;  
+    padding: 12px 20px; 
+    height: auto;       
+    display: block;     
+    width: 100%;       
+    border: 2px solid var(--secondary-color); 
+    border-radius: 5px; 
 }
 #exam-builder .custom-select:focus {
-    border-color: var(--trd-color); /* More noticeable focus color */
-    box-shadow: 0 0 0.5rem rgba(178, 34, 34, 0.5); /* Larger shadow for emphasis on focus */
+    border-color: var(--trd-color); 
+    box-shadow: 0 0 0.5rem rgba(178, 34, 34, 0.5); 
 }
-/* Button styling to align with the site's color palette */
 .btn-primary, .btn-secondary {
     padding: 10px 20px;
     border-radius: 4px;
     color: var(--header-text-color);
     border: none;
-    margin: 5px; /* Small margin for spacing between buttons */
+    margin: 5px; 
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -242,7 +235,7 @@ main .btn {
 }
 
 .btn-primary:hover {
-    background-color: var(--trd-color); /* Darker on hover for better user feedback */
+    background-color: var(--trd-color); 
 }
 
 .btn-secondary {
@@ -250,125 +243,118 @@ main .btn {
 }
 
 .btn-secondary:hover {
-    background-color: var(--trd-color); /* Consistent hover effect for secondary buttons */
+    background-color: var(--trd-color); 
 }
-/* Examination Generator Styles */
 #exam-builder h2 {
     color: var(--secondary-color);
-    margin-bottom: 20px; /* Adjusted for visual spacing */
+    margin-bottom: 20px; 
 }
 
-/* Enhance table aesthetics */
 #exam-builder .table {
     margin-top: 20px;
     border-collapse: collapse;
-    width: 100%; /* Full width to match container or specified width */
+    width: 100%; 
 }
 
 #exam-builder thead {
-    background-color: #272727; /* Grey for header background */
-    color: black; /* Black for header text */
+    background-color: #272727; 
+    color: black; 
 }
 
 #exam-builder th {
-    border: 1px solid #ccc; /* Subtle borders for cells */
-    padding: 8px; /* Adequate padding for cell content */
+    border: 1px solid #ccc; 
+    padding: 8px; 
     text-align: left; 
-    color:white/* Aligning text to the left for consistency */
+    color:white
 }
 #exam-builder td {
-    border: 1px solid #ccc; /* Subtle borders for cells */
-    padding: 8px; /* Adequate padding for cell content */
+    border: 1px solid #ccc; 
+    padding: 8px; 
     text-align: left; 
-    color: black;/* Aligning text to the left for consistency */
+    color: black;
 }
 
-/* Apply zebra striping for rows */
 #exam-builder tbody tr:nth-child(odd) {
     background-color:  #272727; 
 }
 
-/* Highlight rows on hover */
 #exam-builder tbody tr:hover {
     background-color: #272727;
-    color: white; /* Slightly darker grey on hover */
+    color: white; 
 }
 
-/* If you need to reset the hover effects explicitly on headers */
 #exam-builder thead tr:hover {
     background-color:  #272727;
-    color: white;/* Keep header hover consistent with non-hover state */
+    color: white;
 }
-/* Container for the Manage Correlation Form */
 #analyzeData {
-    background-color: #fff; /* White background for the form area */
-    border: 1px solid #ccc; /* Light gray border for subtle definition */
-    border-radius: 8px; /* Rounded corners for a modern look */
-    padding: 20px; /* Adequate padding around the content */
-    margin-top: 20px; /* Space from the top */
-    width: auto; /* Adjust width as needed or keep auto */
+    background-color: #fff; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    padding: 20px; 
+    margin-top: 20px; 
+    width: auto; 
+    margin-bottom: 30px;
 }
 
-/* Header within the form */
 #analyzeData h2 {
-    color: #333; /* Dark grey for the header */
-    margin-bottom: 20px; /* Space below the header */
+    color: #333;
+    margin-bottom: 20px; 
 }
 
-/* Styling for form elements */
 #analyzeData .form-group {
-    margin-bottom: 15px; /* Space between form elements */
+    margin-bottom: 15px; 
 }
 
 #analyzeData label {
-    font-weight: bold; /* Bold font for labels */
-    color: #666; /* Medium grey for text */
-    margin-bottom: 5px; /* Space below the label */
+    font-weight: bold; 
+    color: #666; 
+    margin-bottom: 5px; 
 }
 
 #analyzeData select, #analyzeData input[type="file"] {
-    width: 100%; /* Full width of the parent container */
-    padding: 8px; /* Padding inside elements for better text entry */
-    border: 1px solid #ccc; /* Subtle border */
-    border-radius: 4px; /* Rounded corners */
-    background-color: #f8f8f8; /* Light grey background */
+    width: 100%;
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    background-color: #f8f8f8; 
 }
 
-/* Button container to align buttons next to each other */
 .button-container {
     display: flex; /* Space out buttons */
     gap: 10px; /* Gap between buttons */
+=======
+    display: flex;
+    justify-content: space-between; 
+    gap: 10px; 
 }
 
-/* Style adjustments for buttons */
 #analyzeData .btn {
-    border: none; /* No border for a cleaner look */
-    padding: 10px 20px; /* Padding for better touch interaction */
-    font-size: 16px; /* Readable font size */
-    border-radius: 4px; /* Consistent rounded corners */
-    width: 49%; /* Each button takes up half the container width minus the gap */
-    cursor: pointer; /* Pointer to indicate clickable area */
-    transition: background-color 0.2s; /* Smooth transition for hover effects */
+    border: none; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border-radius: 4px; 
+    width: 49%; 
+    cursor: pointer; 
+    transition: background-color 0.2s; 
 }
 
-/* Primary action button */
 #analyzeData .btn-primary {
-    background-color: #B22222; /* Red background */
-    color: white; /* White text for contrast */
+    background-color: #B22222; 
+    color: white; 
 }
 
 #analyzeData .btn-primary:hover {
-    background-color: #DA3E3E; /* Lighter red on hover */
+    background-color: #DA3E3E; 
 }
 
-/* Secondary action button */
 #analyzeData .btn-secondary {
-    background-color: #272727; /* Dark grey background */
-    color: white; /* White text for contrast */
+    background-color: #272727; 
+    color: white; 
 }
 
 #analyzeData .btn-secondary:hover {
-    background-color: #333333; /* Slightly darker grey on hover */
+    background-color: #333333; 
 }
 
 
@@ -400,4 +386,107 @@ main .btn {
     header {
         width: 100%;
     }
+}
+
+#analyzeProgram {
+    background-color: white;
+    color: black;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#analyzeProgram option {
+    background-color: white;
+    color: black;
+    padding: 8px;
+}
+
+#analysisResults h3 {
+    color: var(--secondary-color);
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 10px;
+    margin-top: 30px;
+}
+
+#analysisResults table {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#setSelectGroup {
+    margin-top: 15px;
+}
+
+#setSelect {
+    background-color: white;
+    color: black;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#setSelect option {
+    background-color: white;
+    color: black;
+    padding: 8px;
+}
+
+#analysisResults {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--secondary-color);
+}
+
+/* Remove any display:none from the containers */
+#analyzeData, #analysisResults {
+    display: block;
+}
+
+.course-summary {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.course-summary h4 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.course-summary table {
+    margin-bottom: 0;
+}
+
+.course-summary th {
+    background-color: var(--header-color);
+    color: white;
+}
+
+#analysisOptions {
+    border-top: 2px solid var(--secondary-color);
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+#overallStatsBtn {
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: var(--secondary-color);
+    border: none;
+}
+
+#overallStatsBtn:hover {
+    background-color: var(--trd-color);
+}
+
+.course-summary.overall {
+    background-color: #f0f2f5;
+    border: 1px solid var(--secondary-color);
 }
