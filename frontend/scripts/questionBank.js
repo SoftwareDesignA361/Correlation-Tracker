@@ -2,12 +2,37 @@
 const programSelect = document.getElementById('program');
 const courseSelect = document.getElementById('course');
 const yearSelect = document.getElementById('school_year');
+const submitButton = document.getElementById('submit'); // Locate submit button
 
-//POPULATE PROGRAM SELECTION
+
+// Create additional input fields
+const additionalInputsContainer = document.createElement('div');
+additionalInputsContainer.id = 'additionalInputsContainer';
+additionalInputsContainer.style.display = 'none'; // Hidden by default
+
+const correlationTypeInput = document.createElement('input');
+correlationTypeInput.type = 'text';
+correlationTypeInput.placeholder = 'Enter Correlation Type';
+correlationTypeInput.id = 'correlationType';
+
+const dayInput = document.createElement('input');
+dayInput.type = 'text';
+dayInput.placeholder = 'Enter Day';
+dayInput.id = 'dayInput';
+
+// Append the new inputs to the container
+additionalInputsContainer.appendChild(correlationTypeInput);
+additionalInputsContainer.appendChild(dayInput);
+
+// Insert the additional inputs above the submit button
+questionForm.insertBefore(additionalInputsContainer, submitButton);
+
 const showProgram = async () => {
-    //GET DATA FROM BACKEND
     const res = await fetch('/api/programs');
     const programs = await res.json();
+
+    programSelect.innerHTML = '<option value="" disabled selected>--Select a Program--</option>';
+
     if (programs.length === 0) {
         const option = document.createElement('option');
         option.value = '';
@@ -15,13 +40,24 @@ const showProgram = async () => {
         programSelect.appendChild(option);
         return;
     }
+
     programs.forEach(program => {
         const option = document.createElement('option');
         option.value = program;
         option.textContent = program;
         programSelect.appendChild(option);
     });
+
+    programSelect.addEventListener('change', () => {
+        const selectedProgram = programSelect.value;
+        if (selectedProgram !== 'MATH' && selectedProgram !== 'GEAS') {
+            additionalInputsContainer.style.display = 'block'; // Show inputs
+        } else {
+            additionalInputsContainer.style.display = 'none'; // Hide inputs
+        }
+    });
 };
+
 document.addEventListener('DOMContentLoaded', showProgram);
 
 //POPULATE COURSE SELECTION
@@ -79,6 +115,19 @@ document.getElementById('questionForm').addEventListener('submit', async (e) => 
         choice_3: document.getElementById('choice_3').value,
         answer: document.getElementById('choice_4').value
     };
+    
+    //This code is for including the values from the correl day and type fields.
+    /*const correlationTypeInput = document.getElementById('correlationType');
+    const dayInput = document.getElementById('dayInput');
+
+    if (correlationTypeInput && dayInput && additionalInputsContainer.style.display === 'block') {
+        data.correlationType = correlationTypeInput.value || null;
+        data.day = dayInput.value || null;
+    }
+
+    console.log(data); // Debugging: see collected data*/
+
+
     const response = await fetch('/api/quiz', {
         method: 'POST',
         headers: {
