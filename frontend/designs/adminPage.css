@@ -66,9 +66,24 @@ main h2 {
 /* Container for buttons to ensure proper alignment */
 .button-container {
     display: flex;
-    justify-content: center; /* Adjust this as needed, `space-between` could also work */
-    align-items: center; /* Align items vertically */
-    margin-top: 20px; /* Spacing from the last input field */
+    justify-content: space-between; /* Ensures the child elements are pushed to the sides */
+    align-items: center; /* Keeps buttons vertically aligned */
+    padding-top: 20px; /* Provides some spacing from the elements above */
+}
+
+.button-container > div {
+    display: flex;
+    gap: 10px; /* Space between "Generate" and "Print PDF" buttons */
+}
+      
+
+.btn-secondary {
+    background-color: var(--header-color);
+    color: var(--header-text-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--trd-color); /* Hover effect */
 }
 
 /* Styling for all buttons */
@@ -321,8 +336,7 @@ main .btn {
 
 /* Button container to align buttons next to each other */
 .button-container {
-    display: flex;
-    justify-content: space-between; /* Space out buttons */
+    display: flex; /* Space out buttons */
     gap: 10px; /* Gap between buttons */
 }
 

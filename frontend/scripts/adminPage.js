@@ -99,3 +99,4 @@ function displayResults(data) {
 
     resultsContainer.style.display = 'block';  // Show the results
 }
+

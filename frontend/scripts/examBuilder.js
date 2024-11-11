@@ -87,26 +87,35 @@ const courseDisplay = async () => {
 }
 programBuilder.addEventListener('change', courseDisplay);
 
-document.getElementById('generate').addEventListener('click', async (e)=>{
+document.getElementById('generate').addEventListener('click', async (e) => {
     e.preventDefault();
     const data = {
         courses: courseList,
         items: courseItems,
-        sets: setNumber.value,
-        program: programBuilder.value
+        sets: document.getElementById('sets').value,
+        program: document.getElementById('select-program').value
     };
-    const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    if (result.success) {
-        alert(`Questionnaire has been generated. Please copy this code to access the questionnaire: ${result.generateID}`);
-    } else {
-        console.error("Error inserting data:", result.error);
+
+    try {
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert(`Questionnaire has been generated. Please copy this code to access the questionnaire: ${result.generateID}`);
+            document.getElementById('get-pdf').style.display = 'block'; // Unhide the "Print PDF" button on success
+        } else {
+            console.error("Error inserting data:", result.error);
+            alert("Failed to generate the questionnaire. Please try again.");
+        }
+    } catch (error) {
+        console.error("Failed to fetch from API:", error);
+        alert("Error connecting to the server.");
     }
 });
 
