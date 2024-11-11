@@ -94,3 +94,45 @@ document.getElementById('questionForm').addEventListener('submit', async (e) => 
         console.error("Error inserting data:", result.error);
     }
 });
+
+function showCorrelationFields() {
+    const program = document.getElementById("program").value;
+    const correlationFields = document.getElementById("correlationFields");
+    const correlType = document.getElementById("correl_type");
+    const day = document.getElementById("day");
+
+    if (program === "GEAS" || program === "MATH") {
+        // Hide correlation type, set Day to "Day 1", and disable day selection
+        correlationFields.style.display = "none";
+        correlType.value = "";
+        day.innerHTML = `<option value="Day 1" selected>Day 1</option>`;
+        day.disabled = true;
+    } else {
+        // Show correlation type and enable day selection
+        correlationFields.style.display = "block";
+        correlType.value = "";
+        day.innerHTML = `<option value="" disabled selected>--Select Day--</option>
+                         <option value="Day 1">Day 1</option>
+                         <option value="Day 2">Day 2</option>`;
+        day.disabled = false;
+    }
+}
+
+function setDayOptions() {
+    const correlType = document.getElementById("correl_type").value;
+    const day = document.getElementById("day");
+
+    if (correlType === "correl 1") {
+        // Set Day to "Day 1" and disable day selection
+        day.innerHTML = `<option value="Day 1" selected>Day 1</option>`;
+        day.disabled = true;
+    } else if (correlType === "correl 2") {
+        // Enable day selection between "Day 1" and "Day 2"
+        day.innerHTML = `<option value="" disabled selected>--Select Day--</option>
+                         <option value="Day 1">Day 1</option>
+                         <option value="Day 2">Day 2</option>`;
+        day.disabled = false;
+    }
+}
+
+

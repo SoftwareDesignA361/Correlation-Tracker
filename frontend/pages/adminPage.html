@@ -78,13 +78,33 @@
         <!-- Question Bank -->
         <div class="container text-center" id="question-pool">
             <form id="questionForm">
-                <select id="program" required>
+                <select id="program" class="form-control mb-3" onchange="showCorrelationFields()" required>
                     <option value="" disabled selected>--Select a Program--</option>
+                    
                 </select>
                 
                 <select id="course" required>
                     <option value="" disabled selected>--Select a Course Code--</option>
                 </select>
+
+                <div id="correlationFields" style="display: none;">
+                    <div class="form-group">
+                        <select id="correl_type" class="form-control mb-3" onchange="setDayOptions()" required>
+                            <option value="" disabled selected>--Select Correlation Type--</option>
+                            <option value="correl 1">Correl 1</option>
+                            <option value="correl 2">Correl 2</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Day Field (Always visible) -->
+                <div class="form-group">
+                    <select id="day" class="form-control mb-3" required>
+                        <option value="" disabled selected>--Select Day--</option>
+                        <option value="Day 1">Day 1</option>
+                        <option value="Day 2">Day 2</option>
+                    </select>
+                </div>
                 
                 <select id="school_year" required>
                     <option value="" disabled selected>School Year</option>
