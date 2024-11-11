@@ -92,7 +92,8 @@ document.getElementById('generate').addEventListener('click', async (e)=>{
     const data = {
         courses: courseList,
         items: courseItems,
-        sets: setNumber.value
+        sets: setNumber.value,
+        program: programBuilder.value
     };
     const res = await fetch('/api/generate', {
         method: 'POST',
@@ -103,8 +104,12 @@ document.getElementById('generate').addEventListener('click', async (e)=>{
     });
     const result = await res.json();
     if (result.success) {
-        alert("Generating Questionnaire");
+        alert(`Questionnaire has been generated. Please copy this code to access the questionnaire: ${result.generateID}`);
     } else {
         console.error("Error inserting data:", result.error);
     }
+});
+
+document.getElementById('get-pdf').addEventListener('click', async () => {
+    window.location.href = '/paper'
 });
