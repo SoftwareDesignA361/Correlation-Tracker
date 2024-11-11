@@ -4,6 +4,7 @@ import 'dotenv/config';
 import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 //login-validation [BACKEND]
 import validateLogin from './backend/login-validation.js';
@@ -12,7 +13,7 @@ import validateLogin from './backend/login-validation.js';
 import { fetchPrograms, fetchCourses, fetchYears, insertQuizData } from './backend/question-bank.js';
 
 //exam-builder [BACKEND]
-import { getCourseQuestions } from './backend/exam-builder.js';
+import { getCourseQuestions, getQuestionnaire } from './backend/exam-builder.js';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -28,6 +29,7 @@ const app = express();
 
 //MIDDLEWARE
 app.use(express.json());
+app.use(cors())
 
 //QUESTION POOL FETCH
 app.get('/api/programs', fetchPrograms);
@@ -37,7 +39,7 @@ app.post('/api/quiz', insertQuizData);
 
 //EXAM BUILDER FETCH
 app.post('/api/generate', getCourseQuestions);
-
+app.get('/get-questions/:id', getQuestionnaire)
 app.use(session({
     secret: 'CPE107L-1.A361',
     resave: false,
@@ -112,6 +114,10 @@ app.post('/logout', (req, res) => {
         }
         res.status(200).send('Logout successful');
     });
+});
+
+app.get('/paper', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'pages', 'questionnaireFormat.html'));
 });
 
 app.listen(3000, () => {
