@@ -144,8 +144,7 @@ export const analyzeData = async (req, res) => {
                 }
             });
 
-            // Analyze each question (1-20)
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= 100; i++) {
                 const questionKey = `Q ${i} Marks`;
                 
                 if (setRecords[0] && questionKey in setRecords[0]) {

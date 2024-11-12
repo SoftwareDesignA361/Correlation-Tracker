@@ -28,9 +28,18 @@ export const getCourseQuestions = async (req, res) => {
         }
 
         randomQuestion = [];
-        // Generate unique ID for this questionnaire
         const randomId = crypto.randomBytes(10).toString('hex');
         
+        // First, validate available questions for all courses
+        const availabilityCheck = await checkQuestionAvailability(program, courses, items);
+        if (!availabilityCheck.success) {
+            return res.json({
+                success: false,
+                error: availabilityCheck.error,
+                availableCounts: availabilityCheck.availableCounts
+            });
+        }
+
         try {
             await randomFetch(program, courses, items, sets, randomId, schoolYear, term, day, attempt);
             res.json({ success: true, generateID: randomId });
@@ -50,11 +59,45 @@ export const getCourseQuestions = async (req, res) => {
     }
 };
 
+// New function to check question availability before proceeding
+const checkQuestionAvailability = async (program, courses, items) => {
+    const availableCounts = {};
+    
+    for (let i = 0; i < courses.length; i++) {
+        const { data, error } = await supabase
+            .from(`${program}_question_bank`)
+            .select('id')
+            .eq('course', courses[i]);
+
+        if (error) {
+            return {
+                success: false,
+                error: `Database error while checking questions for ${courses[i]}`
+            };
+        }
+
+        const availableCount = data ? data.length : 0;
+        availableCounts[courses[i]] = availableCount;
+
+        if (availableCount < items[i]) {
+            return {
+                success: false,
+                error: `Not enough questions available for ${courses[i]}. Available: ${availableCount}, Requested: ${items[i]}`,
+                availableCounts
+            };
+        }
+    }
+
+    return {
+        success: true,
+        availableCounts
+    };
+};
+
 // Function to randomly fetch questions for each course
 const randomFetch = async (program, course, item, set, randomId, schoolYear, term, day, attempt) => {
     randomQuestion = [];
     
-    // Fetch and select random questions for each course
     for (let i = 0; i < course.length; i++) {
         const { data, error } = await supabase
             .from(`${program}_question_bank`)
@@ -62,16 +105,9 @@ const randomFetch = async (program, course, item, set, randomId, schoolYear, ter
             .eq('course', course[i]);
 
         if (error) {
-            console.error(`Error fetching data for course ${course[i]}:`, error);
             throw new Error(`Database error while fetching questions for ${course[i]}`);
-        } 
-        
-        // Validate sufficient questions are available
-        if (!data || data.length < item[i]) {
-            throw new Error(`Not enough questions available for ${course[i]}.\nAvailable: ${data ? data.length : 0}, Requested: ${item[i]}`);
         }
 
-        // Randomly select required number of questions
         const shuffled = data.sort(() => 0.5 - Math.random());
         const selectedQuestions = shuffled.slice(0, item[i]);
         randomQuestion.push(...selectedQuestions.map(item => item.id));

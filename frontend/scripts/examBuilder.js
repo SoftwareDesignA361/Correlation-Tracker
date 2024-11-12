@@ -19,6 +19,23 @@ function updateTotal(){
 // Validation function to ensure minimum question requirements
 function checkMinimumQuestions() {
     const totalQuestions = courseItems.reduce((sum, currentValue) => sum + currentValue, 0);
+    
+    if (totalQuestions !== 100) {
+        const popup = document.createElement('div');
+        popup.className = 'custom-popup';
+        popup.innerHTML = `
+            <div class="popup-content">
+                <h4>Incorrect Number of Questions</h4>
+                <p>The total number of questions must be exactly 100.</p>
+                <p>Current total: ${totalQuestions}</p>
+                <p>Please adjust your question distribution.</p>
+                <button class="btn btn-secondary" onclick="this.parentElement.parentElement.remove()">Close</button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        return false;
+    }
+    
     if (totalQuestions < 20) {
         const popup = document.createElement('div');
         popup.className = 'custom-popup';
