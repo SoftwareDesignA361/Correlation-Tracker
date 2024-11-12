@@ -2,16 +2,21 @@ import { createClient } from '@supabase/supabase-js';
 import { parse } from 'csv-parse';
 import dotenv from 'dotenv';
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Initialize Supabase client with credentials
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
+// Main function to analyze uploaded CSV data and return question/course statistics
 export const analyzeData = async (req, res) => {
     try {
+        // Validate that CSV file was uploaded
         if (!req.files || !req.files.csvFile) {
             return res.status(400).json({ error: 'No CSV file uploaded' });
         }
 
+        // Extract request parameters
         const csvFile = req.files.csvFile;
         const program = req.body.program;
         const term = parseInt(req.body.term);
@@ -19,12 +24,14 @@ export const analyzeData = async (req, res) => {
         const schoolYear = req.body.schoolYear;
         const attempt = req.body.attempt ? parseInt(req.body.attempt) : null;
 
+        // Validate required fields are present
         if (!program || !term || !day || !schoolYear) {
             return res.status(400).json({ 
                 error: 'All fields (Program, Term, Day, and School Year) are required' 
             });
         }
 
+        // Special validation for MATH and GEAS programs
         if ((program === 'MATH' || program === 'GEAS') && !attempt) {
             return res.status(400).json({
                 error: 'Attempt is required for MATH and GEAS programs'
@@ -39,6 +46,7 @@ export const analyzeData = async (req, res) => {
             attempt
         });
 
+        // Build query to check if exam exists
         let query = supabase
             .from('set_generator')
             .select('id, program, term, day, school_year')
@@ -47,6 +55,7 @@ export const analyzeData = async (req, res) => {
             .eq('day', day)
             .eq('school_year', schoolYear);
 
+        // Add attempt filter for MATH/GEAS programs
         if (program === 'MATH' || program === 'GEAS') {
             query = query.eq('attempt', attempt);
         }
@@ -56,6 +65,7 @@ export const analyzeData = async (req, res) => {
         console.log('Query results:', examExists);
         console.log('Query error:', examError);
 
+        // Return error if exam not found
         if (examError || !examExists || examExists.length === 0) {
             return res.status(404).json({ 
                 error: 'No exam found',
@@ -63,6 +73,7 @@ export const analyzeData = async (req, res) => {
             });
         }
 
+        // Fetch question set data for the exam
         const { data: setData, error: setError } = await supabase
             .from('set_generator')
             .select('questions')
@@ -84,7 +95,7 @@ export const analyzeData = async (req, res) => {
 
         const questions = setData[0].questions;
 
-        // Parse CSV
+        // Parse CSV file into records
         const records = await new Promise((resolve, reject) => {
             parse(csvFile.data.toString(), {
                 columns: true,
@@ -102,6 +113,7 @@ export const analyzeData = async (req, res) => {
             });
         });
 
+        // Group records by exam set
         const recordsBySet = {};
         records.forEach(record => {
             const set = record['Exam Set'];
@@ -111,14 +123,17 @@ export const analyzeData = async (req, res) => {
             recordsBySet[set].push(record);
         });
 
+        // Initialize results storage
         const resultsBySet = {};
         const courseStatsBySet = {};
         
+        // Process each exam set
         for (const [set, setRecords] of Object.entries(recordsBySet)) {
             const results = [];
             const totalStudents = setRecords.length;
             const courseStats = {};
 
+            // Initialize course statistics
             questions.forEach(q => {
                 if (!courseStats[q.course]) {
                     courseStats[q.course] = {
@@ -129,10 +144,12 @@ export const analyzeData = async (req, res) => {
                 }
             });
 
+            // Analyze each question (1-20)
             for (let i = 1; i <= 20; i++) {
                 const questionKey = `Q ${i} Marks`;
                 
                 if (setRecords[0] && questionKey in setRecords[0]) {
+                    // Count correct and wrong answers
                     const correct = setRecords.filter(record => 
                         record[questionKey] && record[questionKey].trim() === '1'
                     ).length;
@@ -141,15 +158,18 @@ export const analyzeData = async (req, res) => {
                         record[questionKey] && record[questionKey].trim() === '0'
                     ).length;
 
+                    // Get question details and course
                     const questionData = questions.find(q => q.examId === i);
                     const course = questionData ? questionData.course : 'Unknown';
 
+                    // Update course statistics
                     if (courseStats[course]) {
                         courseStats[course].totalQuestions++;
                         courseStats[course].totalCorrect += correct;
                         courseStats[course].totalAttempts += (correct + wrong);
                     }
 
+                    // Store question results
                     results.push({
                         questionNumber: i,
                         course: course,
@@ -162,6 +182,7 @@ export const analyzeData = async (req, res) => {
                 }
             }
 
+            // Calculate course performance metrics
             const coursePerformance = Object.entries(courseStats).map(([course, stats]) => ({
                 course,
                 totalQuestions: stats.totalQuestions,
@@ -169,6 +190,7 @@ export const analyzeData = async (req, res) => {
                 totalStudents: totalStudents
             }));
 
+            // Store results for this set
             resultsBySet[set] = {
                 questionResults: results,
                 coursePerformance: coursePerformance
@@ -186,8 +208,10 @@ export const analyzeData = async (req, res) => {
     }
 };
 
+// Function to fetch unique programs from database
 export const getPrograms = async (req, res) => {
     try {
+        // Query programs from program_course table
         const { data, error } = await supabase
             .from('program_course')
             .select('program')
@@ -195,6 +219,7 @@ export const getPrograms = async (req, res) => {
 
         if (error) throw error;
 
+        // Extract unique programs and format response
         const uniquePrograms = [...new Set(data.map(item => item.program))];
         const formattedData = uniquePrograms.map(program => ({ program }));
 

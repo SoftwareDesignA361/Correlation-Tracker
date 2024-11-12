@@ -1,28 +1,34 @@
-//SUPABASE AND DOTENV IMPORTS
+// Import required dependencies
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 dotenv.config();
 
+// Initialize Supabase client with environment variables
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
+// Array to store randomly selected question IDs
 let randomQuestion = [];
+
+// Main handler for generating course questions
 export const getCourseQuestions = async (req, res) => {
     try {
         const { courses, items, sets, program, schoolYear, term, day, attempt } = req.body;
 
+        // Validate required fields
         if (!courses || !items || !sets || !program || !schoolYear || !term || !day) {
             return res.json({ success: false, error: 'Missing required fields' });
         }
 
+        // Special validation for MATH and GEAS programs that require attempt number
         if ((program === 'MATH' || program === 'GEAS') && !attempt) {
             return res.json({ success: false, error: 'Attempt is required for MATH and GEAS programs' });
         }
 
         randomQuestion = [];
+        // Generate unique ID for this questionnaire
         const randomId = crypto.randomBytes(10).toString('hex');
         
         try {
@@ -44,9 +50,11 @@ export const getCourseQuestions = async (req, res) => {
     }
 };
 
+// Function to randomly fetch questions for each course
 const randomFetch = async (program, course, item, set, randomId, schoolYear, term, day, attempt) => {
     randomQuestion = [];
     
+    // Fetch and select random questions for each course
     for (let i = 0; i < course.length; i++) {
         const { data, error } = await supabase
             .from(`${program}_question_bank`)
@@ -58,15 +66,18 @@ const randomFetch = async (program, course, item, set, randomId, schoolYear, ter
             throw new Error(`Database error while fetching questions for ${course[i]}`);
         } 
         
+        // Validate sufficient questions are available
         if (!data || data.length < item[i]) {
             throw new Error(`Not enough questions available for ${course[i]}.\nAvailable: ${data ? data.length : 0}, Requested: ${item[i]}`);
         }
 
+        // Randomly select required number of questions
         const shuffled = data.sort(() => 0.5 - Math.random());
         const selectedQuestions = shuffled.slice(0, item[i]);
         randomQuestion.push(...selectedQuestions.map(item => item.id));
     }
 
+    // Verify total question count matches expected
     const totalQuestions = randomQuestion.length;
     const expectedTotal = item.reduce((sum, val) => sum + val, 0);
     
@@ -79,17 +90,21 @@ const randomFetch = async (program, course, item, set, randomId, schoolYear, ter
     await shuffleQuestionnaire(randomQuestion, program, set, randomId, schoolYear, term, day, attempt);
 };
 
+// Function to create multiple sets of shuffled questionnaires
 const shuffleQuestionnaire = async (questionnaire, program, set, randomId, schoolYear, term, day, attempt) => {
     const originalQuestions = [...questionnaire];
 
+    // Generate specified number of question sets
     for (let i = 1; i <= set; i++) {
         let finalQuestionnaire = [];
         let examCounter = 1;
 
+        // Shuffle questions for this set
         const shuffledQuestions = [...originalQuestions].sort(() => 0.5 - Math.random());
 
         console.log(`Set ${i}: ${shuffledQuestions.length} questions`);
         
+        // Fetch full question details for each question ID
         for (const questionId of shuffledQuestions) {
             const { data, error } = await supabase
                 .from(`${program}_question_bank`)
@@ -102,6 +117,7 @@ const shuffleQuestionnaire = async (questionnaire, program, set, randomId, schoo
                 throw error;
             }
 
+            // Format question data
             finalQuestionnaire.push({
                 questionId: questionId,
                 examId: examCounter++,
@@ -112,6 +128,7 @@ const shuffleQuestionnaire = async (questionnaire, program, set, randomId, schoo
             });
         }
 
+        // Store the generated set in database
         const { data, error } = await supabase
             .from('set_generator')
             .insert([
@@ -136,7 +153,7 @@ const shuffleQuestionnaire = async (questionnaire, program, set, randomId, schoo
     }
 };
 
-//  GET PDF
+// API endpoint to retrieve questionnaire data for PDF generation
 export const getQuestionnaire = async (req,res) =>{
     const { id, set } = req.params;
         try {

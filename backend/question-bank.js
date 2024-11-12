@@ -1,14 +1,21 @@
-//SUPABASE AND DOTENV IMPORTS
+// Import required dependencies for Supabase and environment variables
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Initialize Supabase client with credentials from environment variables
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-//CONDITIONAL SELECTOR
+/**
+ * Maps full program names to their abbreviated codes
+ * Used for selecting correct column names in database queries
+ * @param {string} value - Full program name
+ * @returns {string} Abbreviated program code
+ */
 function courseVal(value){
     switch (value){
         case 'Computer Engineering':
@@ -32,7 +39,11 @@ function courseVal(value){
     }
 }
 
-//GET VALUES OF PROGRAMS FROM DB
+/**
+ * Fetches all unique programs from the program_course table
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const fetchPrograms = async (req, res) => {
     const { data, error } = await supabase
         .from('program_course')
@@ -48,7 +59,12 @@ export const fetchPrograms = async (req, res) => {
     res.json(uniquePrograms);
 };
 
-//GET VALUES OF COURSES FROM DB
+/**
+ * Fetches all courses for a specific program
+ * Uses courseVal() to map program names to column names
+ * @param {Object} req - Express request object with program in query params
+ * @param {Object} res - Express response object
+ */
 export const fetchCourses = async (req, res) => {
     const program = req.query.program;
     const { data, error } = await supabase
@@ -66,7 +82,11 @@ export const fetchCourses = async (req, res) => {
     res.json(uniqueCourses);
 };
 
-// GET VALUES OF YEAR IN DB
+/**
+ * Fetches all unique school years from the program_course table
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const fetchYears = async (req, res) => {
     const { data, error } = await supabase
         .from('program_course')
@@ -82,7 +102,11 @@ export const fetchYears = async (req, res) => {
     res.json(uniqueYears);
 };
 
-// INSERTING DATA
+/**
+ * Inserts a new quiz question into the program-specific question bank
+ * @param {Object} req - Express request object containing quiz data in body
+ * @param {Object} res - Express response object
+ */
 export const insertQuizData = async (req, res) => {
     const { program, course, year, question, choice_1, choice_2, choice_3, answer } = req.body;
     console.log(program)
@@ -105,6 +129,12 @@ export const insertQuizData = async (req, res) => {
     res.json({ success: true });
 };
 
+/**
+ * Fetches all questions for a specific program's question bank
+ * Orders results by course name ascending
+ * @param {Object} req - Express request object with program in query params
+ * @param {Object} res - Express response object
+ */
 export const fetchQuestions = async (req, res) => {
     const program = req.query.program;
     const tableName = `${program}_question_bank`;

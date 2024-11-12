@@ -1,23 +1,25 @@
-//VARIABLES AND CONSTANTS
-const programBuilder = document.getElementById('select-program');
-const tableSelect = document.getElementById('course-table');
-const setNumber = document.getElementById('sets');
-let courseItems, courseList, total;
+// Main variables for exam builder functionality
+const programBuilder = document.getElementById('select-program'); // Program selection dropdown
+const tableSelect = document.getElementById('course-table'); // Table for course selection
+const setNumber = document.getElementById('sets'); // Number of exam sets input
+let courseItems, courseList, total; // Arrays to store course items, course list and total items
 
-//FUNCTIONS
+// Core functions for managing course items and totals
 function updateArray(index, value){
     courseItems[index] = value || 0;
     updateTotal();
 }
+
 function updateTotal(){
     const totalCell = document.getElementById('total-cell');
     total = courseItems.reduce((sum, currentValue) => sum + currentValue, 0);
     totalCell.textContent = total;
 }
 
+// Validation function to ensure minimum question requirements
 function checkMinimumQuestions() {
     const totalQuestions = courseItems.reduce((sum, currentValue) => sum + currentValue, 0);
-    if (totalQuestions < 100) {
+    if (totalQuestions < 20) {
         const popup = document.createElement('div');
         popup.className = 'custom-popup';
         popup.innerHTML = `
@@ -34,6 +36,7 @@ function checkMinimumQuestions() {
     return true;
 }
 
+// Comprehensive input validation for exam generation
 function validateInputs() {
     const program = document.getElementById('select-program').value;
     const schoolYear = document.getElementById('school-year').value;
@@ -44,6 +47,7 @@ function validateInputs() {
     
     const hasItems = courseItems && courseItems.some(item => item > 0);
     
+    // Check all required fields
     if (!program) {
         alert('Please select a program');
         return false;
@@ -80,6 +84,7 @@ function validateInputs() {
     return true;
 }
 
+// Generic error popup display function
 function showErrorPopup(message) {
     const popup = document.createElement('div');
     popup.className = 'custom-popup';
@@ -93,6 +98,7 @@ function showErrorPopup(message) {
     document.body.appendChild(popup);
 }
 
+// Reset all exam builder form fields and state
 function resetExamBuilder() {
     const programSelect = document.getElementById('select-program');
     if (programSelect) {
@@ -128,6 +134,7 @@ function resetExamBuilder() {
         `;
     }
 
+    // Reset global variables
     courseItems = [];
     courseList = [];
     total = 0;
@@ -150,6 +157,7 @@ function resetExamBuilder() {
     }
 }
 
+// Loading popup for exam generation process
 function showLoadingPopup() {
     const popup = document.createElement('div');
     popup.className = 'loading-popup';
@@ -164,7 +172,7 @@ function showLoadingPopup() {
     return popup;
 }
 
-//DISPLAY PROGRAMS
+// Fetch and display available programs
 const programDisplay = async () => {
     //GET DATA FROM BACKEND
     const res = await fetch('/api/programs');
@@ -185,7 +193,7 @@ const programDisplay = async () => {
 };
 document.addEventListener('DOMContentLoaded', programDisplay);
 
-//DISPLAY COURSES
+// Fetch and display courses for selected program
 const courseDisplay = async () => {
     //GET DATA FROM BACKEND
     const res = await fetch(`/api/courses?program=${programBuilder.value}`);
@@ -245,6 +253,7 @@ const courseDisplay = async () => {
 }
 programBuilder.addEventListener('change', courseDisplay);
 
+// Handle program change to show/hide attempt field for specific programs
 programBuilder.addEventListener('change', function() {
     const attemptGroup = document.getElementById('attemptGroup');
     if (this.value === 'MATH' || this.value === 'GEAS') {
@@ -258,6 +267,7 @@ programBuilder.addEventListener('change', function() {
     courseDisplay();
 });
 
+// Main exam generation event handler
 document.getElementById('generate').addEventListener('click', async (e) => {
     e.preventDefault();
     
@@ -322,6 +332,7 @@ document.getElementById('generate').addEventListener('click', async (e) => {
     }
 });
 
+// Initialize exam builder functionality on page load
 document.addEventListener('DOMContentLoaded', () => {
     const generateButton = document.getElementById('generate');
     if (generateButton) {
@@ -359,6 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Copy questionnaire code functionality
     const copyCode = () => {
         const codeInput = document.getElementById("questionnaireCode");
         const copyMessage = document.getElementById("copyMessage");
@@ -387,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         copyButton.addEventListener('click', copyCode);
     }
 
+    // Back button handler
     const examBuilderBackBtn = document.querySelector('#exam-builder .backBtn');
     if (examBuilderBackBtn) {
         examBuilderBackBtn.addEventListener('click', () => {
@@ -397,10 +410,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Reset form when modal is closed
 $('#questionnaireModal').on('hidden.bs.modal', function () {
     resetExamBuilder();
 });
 
+// PDF generation handler
 document.getElementById('get-pdf')?.addEventListener('click', async () => {
     const examId = localStorage.getItem('currentExamId');
     if (!examId) {
@@ -409,4 +424,3 @@ document.getElementById('get-pdf')?.addEventListener('click', async () => {
     }
     window.open(`/paper?examId=${examId}`, '_blank');
 });
-

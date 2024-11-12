@@ -1,9 +1,10 @@
-//VARIABLES AND CONSTANTS
+// Important DOM element references for form inputs
 const programSelect = document.getElementById('program');
 const courseSelect = document.getElementById('course');
 const yearSelect = document.getElementById('school_year');
 const submitButton = document.getElementById('submit');
 
+// Fetch and populate program dropdown with available programs from API
 const showProgram = async () => {
     const res = await fetch('/api/programs');
     const programs = await res.json();
@@ -26,9 +27,10 @@ const showProgram = async () => {
     });
 };
 
+// Initialize program dropdown when DOM loads
 document.addEventListener('DOMContentLoaded', showProgram);
 
-//POPULATE COURSE SELECTION
+// Populate course selection dropdown based on selected program
 const showCourse = async () => {
     //GET DATA FROM BACKEND
     const res = await fetch(`/api/courses?program=${programSelect.value}`);
@@ -48,9 +50,10 @@ const showCourse = async () => {
         courseSelect.appendChild(option);
     });
 }
+// Update courses when program selection changes
 programSelect.addEventListener('change', showCourse);
 
-//POPULATE YEAR SELECTION
+// Populate school year dropdown with available years from API
 const showYear = async () => {
     const res = await fetch('/api/years');
     const years = await res.json();
@@ -68,15 +71,17 @@ const showYear = async () => {
         yearSelect.appendChild(option);
     });
 };
+// Initialize year dropdown when DOM loads
 document.addEventListener('DOMContentLoaded', showYear);
 
-//SEND DATA TO BACKEND
+// Handle form submission to add new question
 document.getElementById('questionForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const currentProgram = programSelect.value;
     const currentYear = yearSelect.value;
     
+    // Prepare question data for submission
     const data = {
         program: currentProgram,
         course: courseSelect.value,
@@ -88,6 +93,7 @@ document.getElementById('questionForm').addEventListener('submit', async (e) => 
         answer: document.getElementById('choice_4').value
     };
 
+    // Submit question data to backend API
     const response = await fetch('/api/quiz', {
         method: 'POST',
         headers: {
@@ -97,6 +103,7 @@ document.getElementById('questionForm').addEventListener('submit', async (e) => 
     });
     const result = await response.json();
     if (result.success) {
+        // Show success message and reset form
         const successMessage = document.getElementById('successMessage');
         successMessage.style.display = 'block';
         successMessage.classList.add('show');
@@ -107,6 +114,7 @@ document.getElementById('questionForm').addEventListener('submit', async (e) => 
         document.getElementById('choice_3').value = '';
         document.getElementById('choice_4').value = '';
         
+        // Hide success message after 3 seconds
         setTimeout(() => {
             successMessage.style.display = 'none';
             successMessage.classList.remove('show');
@@ -118,13 +126,16 @@ document.getElementById('questionForm').addEventListener('submit', async (e) => 
     }
 });
 
+// Fetch and display questions table for selected program
 const showQuestions = async () => {
     if (!programSelect.value) return;
     
     try {
+        // Get questions data from API
         const res = await fetch(`/api/questions?program=${programSelect.value}`);
         const questions = await res.json();
         
+        // Create or update questions table
         let tableBody = document.getElementById('questionTableBody');
         if (!tableBody) {
             const table = document.createElement('table');
@@ -149,6 +160,7 @@ const showQuestions = async () => {
 
         tableBody.innerHTML = '';
 
+        // Populate table with questions data
         questions.forEach(q => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -167,6 +179,7 @@ const showQuestions = async () => {
     }
 };
 
+// Update course dropdown and questions table when program changes
 programSelect.addEventListener('change', () => {
     showCourse();
     showQuestions();

@@ -1,3 +1,4 @@
+// Event listener for logout button - handles user logout process
 document.querySelector('.logout').addEventListener('click', function(event) {
     event.preventDefault();
     if (confirm("Do you wish to logout?")) {
@@ -18,6 +19,7 @@ document.querySelector('.logout').addEventListener('click', function(event) {
     }
 });
 
+// Helper function to show/hide different content sections
 function showContent(contentId) {
     document.querySelectorAll('.container, .container-fluid').forEach((section) => {
         section.style.display = 'none';
@@ -28,6 +30,7 @@ function showContent(contentId) {
     }
 }
 
+// Navigation event listeners for main menu buttons
 document.getElementById('analyzeDataBtn').addEventListener('click', function() {
     showContent('analyzeData');
     window.history.pushState({}, '', '/admin/analyze-data');
@@ -43,10 +46,12 @@ document.getElementById('exam-builderBtn').addEventListener('click', function() 
     window.history.pushState({}, '', '/admin/exam-builder');
 });
 
+// Back button functionality for all sections
 document.querySelectorAll('.backBtn').forEach(button => {
     button.addEventListener('click', () => {
         const currentSection = button.closest('.container, .container-fluid');
         
+        // Reset analyze data form when going back
         if (currentSection.id === 'analyzeData') {
             const form = document.getElementById('analyzeDataForm');
             if (form) {
@@ -65,6 +70,7 @@ document.querySelectorAll('.backBtn').forEach(button => {
             }
         }
         
+        // Reset question pool form when going back
         if (currentSection.id === 'question-pool') {
             const form = document.getElementById('questionForm');
             if (form) {
@@ -86,6 +92,7 @@ document.querySelectorAll('.backBtn').forEach(button => {
     });
 });
 
+// Handle browser back/forward navigation
 window.addEventListener('popstate', function(event) {
     const path = window.location.pathname.split('/').pop();
     if (path === 'admin') {
@@ -99,6 +106,7 @@ window.addEventListener('popstate', function(event) {
     }
 });
 
+// Initialize analyze data form functionality
 document.addEventListener('DOMContentLoaded', function() {
     const analyzeDataForm = document.querySelector('#analyzeData form');
 
@@ -116,9 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Main initialization and data loading
 document.addEventListener('DOMContentLoaded', async function() {
     let analysisData = null;
 
+    // Load programs for analysis
     try {
         const response = await fetch('/api/analyze-programs');
         const programs = await response.json();
@@ -138,6 +148,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error fetching programs:', error);
     }
 
+    // Handle analyze data form submission
     const analyzeDataForm = document.getElementById('analyzeDataForm');
     if (analyzeDataForm) {
         analyzeDataForm.addEventListener('submit', async function(event) {
@@ -206,6 +217,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
+    // Handle set selection change
     const setSelect = document.getElementById('setSelect');
     setSelect.addEventListener('change', function() {
         const selectedSet = this.value;
@@ -214,6 +226,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
+    // Handle overall stats button click
     document.getElementById('overallStatsBtn').addEventListener('click', function() {
         if (analysisData) {
             displayOverallStats(analysisData);
@@ -221,6 +234,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 });
 
+// Function to display analysis results for specific sets
 function displayResults(data) {
     const resultsContainer = document.getElementById('resultsContent');
     resultsContainer.innerHTML = '';
@@ -310,6 +324,7 @@ function displayResults(data) {
     document.getElementById('analyzeData').style.display = 'block';
 }
 
+// Function to display overall statistics across all sets
 function displayOverallStats(data) {
     const resultsContainer = document.getElementById('resultsContent');
     resultsContainer.innerHTML = '';
@@ -373,10 +388,12 @@ function displayOverallStats(data) {
     resultsContainer.appendChild(table);
 }
 
+// Handle PDF generation button click
 document.getElementById('printPdfBtn').addEventListener('click', function() {
     window.open('/paper', '_blank');
 });
 
+// Function to show custom popup messages
 function showCustomPopup(message) {
     const popup = document.createElement('div');
     popup.className = 'custom-popup';
@@ -395,6 +412,7 @@ function showCustomPopup(message) {
     document.body.appendChild(popup);
 }
 
+// Handle program selection changes - show/hide attempt field for specific programs
 document.getElementById('analyzeProgram').addEventListener('change', function() {
     const attemptGroup = document.getElementById('analyzeAttemptGroup');
     if (this.value === 'MATH' || this.value === 'GEAS') {
@@ -406,4 +424,3 @@ document.getElementById('analyzeProgram').addEventListener('change', function() 
         document.getElementById('analyzeAttempt').value = ''; // Reset the value
     }
 });
-
